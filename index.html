@@ -20,6 +20,93 @@
       padding: 20px;
     }
 
+    .hidden {
+      display: none !important;
+    }
+
+    /* ========== HALAMAN LOGIN ========== */
+    .login-screen {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background: white;
+      border-radius: 24px;
+      padding: 32px 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      text-align: center;
+      height: fit-content;
+    }
+
+    .login-logo {
+      width: 70px;
+      height: 70px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #b91c1c, #ef4444);
+      color: white;
+      font-weight: bold;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+    }
+
+    .login-card h2 {
+      margin-bottom: 4px;
+      color: #111827;
+    }
+
+    .login-subtitle {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 24px;
+    }
+
+    .login-card label {
+      display: block;
+      text-align: left;
+      font-size: 13px;
+      color: #4b5563;
+      margin-bottom: 6px;
+    }
+
+    .login-card input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      margin-bottom: 14px;
+      font-size: 14px;
+    }
+
+    .login-card button {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 13px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      background: #dc2626;
+      color: white;
+    }
+
+    .otp-demo-note {
+      background: #fef2f2;
+      border: 1px dashed #dc2626;
+      color: #b91c1c;
+      border-radius: 12px;
+      padding: 10px;
+      font-size: 12px;
+      margin-bottom: 14px;
+    }
+
+    /* ========== APLIKASI UTAMA ========== */
     .app {
       width: 100%;
       max-width: 420px;
@@ -27,6 +114,7 @@
       border-radius: 24px;
       overflow: hidden;
       box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      height: fit-content;
     }
 
     .header {
@@ -35,11 +123,32 @@
       padding: 24px 20px;
     }
 
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
     .header h1 {
       font-size: 22px;
     }
 
-    /* TANGGAL & JAM REAL TIME DI BAWAH JUDUL */
+    .logout-btn {
+      width: auto;
+      padding: 6px 14px;
+      font-size: 11px;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255,255,255,0.35);
+    }
+
     .datetime {
       margin-top: 6px;
       font-size: 13px;
@@ -215,11 +324,36 @@
   </style>
 </head>
 <body>
-  <div class="app">
-    <div class="header">
-      <h1>XYZ Wallet</h1>
 
-      <!-- TANGGAL & JAM REAL TIME -->
+  <!-- ========== HALAMAN LOGIN ========== -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-card">
+      <div class="login-logo">XYZ</div>
+      <h2>XYZ Wallet</h2>
+      <p class="login-subtitle">Masuk untuk melanjutkan</p>
+
+      <label for="phoneInput">Nomor HP</label>
+      <input type="tel" id="phoneInput" placeholder="Contoh: 08123456789" />
+      <button onclick="sendOtp()">Kirim Kode OTP</button>
+
+      <div id="otpSection" class="hidden" style="margin-top: 18px;">
+        <div class="otp-demo-note" id="otpDemoNote"></div>
+
+        <label for="otpInput">Kode OTP</label>
+        <input type="text" id="otpInput" maxlength="6" placeholder="Masukkan 6 digit OTP" />
+        <button onclick="login()">Masuk</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== APLIKASI UTAMA ========== -->
+  <div class="app hidden" id="appScreen">
+    <div class="header">
+      <div class="header-top">
+        <h1>XYZ Wallet</h1>
+        <button class="logout-btn" onclick="logout()">Keluar</button>
+      </div>
+
       <div class="datetime" id="datetimeDisplay">Memuat waktu...</div>
 
       <div class="balance-card">
@@ -289,6 +423,44 @@
   <script>
     let balance = 0;
     let transactions = [];
+    let generatedOtp = null;
+
+    /* ========== LOGIN OTP SIMULASI ========== */
+    function sendOtp() {
+      const phone = document.getElementById("phoneInput").value.trim();
+
+      if (!/^0[0-9]{9,12}$/.test(phone)) {
+        alert("Masukkan nomor HP yang valid (diawali 0, 10-13 digit).");
+        return;
+      }
+
+      generatedOtp = String(Math.floor(100000 + Math.random() * 900000));
+
+      // Karena ini demo tanpa SMS, OTP ditampilkan di layar
+      document.getElementById("otpDemoNote").textContent =
+        "OTP demo Anda: " + generatedOtp;
+
+      document.getElementById("otpSection").classList.remove("hidden");
+    }
+
+    function login() {
+      const code = document.getElementById("otpInput").value.trim();
+
+      if (code === generatedOtp && generatedOtp !== null) {
+        document.getElementById("loginScreen").classList.add("hidden");
+        document.getElementById("appScreen").classList.remove("hidden");
+      } else {
+        alert("Kode OTP salah. Coba lagi.");
+      }
+    }
+
+    function logout() {
+      document.getElementById("appScreen").classList.add("hidden");
+      document.getElementById("loginScreen").classList.remove("hidden");
+      document.getElementById("otpInput").value = "";
+      document.getElementById("otpSection").classList.add("hidden");
+      generatedOtp = null;
+    }
 
     /* ========== JAM & TANGGAL REAL TIME ========== */
     function updateDateTime() {
@@ -314,11 +486,10 @@
         " • " + jam + ":" + menit + ":" + detik;
     }
 
-    // Jalankan langsung, lalu update otomatis setiap 1 detik
     updateDateTime();
     setInterval(updateDateTime, 1000);
-    /* ============================================== */
 
+    /* ========== FUNGSI DOMPET ========== */
     function formatRupiah(number) {
       return "Rp " + number.toLocaleString("id-ID");
     }
