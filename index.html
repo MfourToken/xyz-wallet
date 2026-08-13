@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>XYZ Wallet - Prototype</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f3f5fb;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 420px;
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    }
+
+    .header {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: white;
+      padding: 24px 20px;
+    }
+
+    .header h1 {
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+
+    .header p {
+      font-size: 12px;
+      opacity: 0.85;
+    }
+
+    .balance-card {
+      margin-top: 18px;
+      background: rgba(255,255,255,0.14);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .balance-label {
+      font-size: 13px;
+      opacity: 0.85;
+      margin-bottom: 6px;
+    }
+
+    .balance-value {
+      font-size: 32px;
+      font-weight: bold;
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: #4b5563;
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-topup {
+      background: #10b981;
+      color: white;
+      margin-bottom: 8px;
+    }
+
+    .btn-transfer {
+      background: #4f46e5;
+      color: white;
+    }
+
+    .transaction-list {
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .transaction-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      border-radius: 12px;
+      background: #f9fafb;
+      margin-bottom: 10px;
+    }
+
+    .transaction-info h4 {
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .transaction-info p {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .amount-positive {
+      color: #059669;
+      font-weight: bold;
+    }
+
+    .amount-negative {
+      color: #dc2626;
+      font-weight: bold;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: #9ca3af;
+      font-size: 13px;
+      padding: 20px 0;
+    }
+
+    .footer-note {
+      margin-top: 10px;
+      font-size: 11px;
+      color: #9ca3af;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <h1>XYZ Wallet</h1>
+      <p>Prototype Demo - Bukan Aplikasi Finansial Asli</p>
+
+      <div class="balance-card">
+        <div class="balance-label">Saldo Anda</div>
+        <div class="balance-value" id="balanceDisplay">Rp 0</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="section-title">Top Up Simulasi</div>
+      <div class="card">
+        <label for="topupAmount">Nominal Top Up</label>
+        <input type="number" id="topupAmount" placeholder="Contoh: 50000" min="1" />
+        <button class="btn-topup" onclick="topUp()">Top Up</button>
+      </div>
+
+      <div class="section-title">Transfer Simulasi</div>
+      <div class="card">
+        <label for="targetName">Nama Tujuan</label>
+        <input type="text" id="targetName" placeholder="Contoh: Budi" />
+
+        <label for="transferAmount">Nominal Transfer</label>
+        <input type="number" id="transferAmount" placeholder="Contoh: 20000" min="1" />
+
+        <button class="btn-transfer" onclick="transfer()">Transfer</button>
+      </div>
+
+      <div class="section-title">Riwayat Transaksi</div>
+      <div class="transaction-list" id="transactionList">
+        <div class="empty-state">Belum ada transaksi</div>
+      </div>
+
+      <div class="footer-note">
+        Semua data hanya simulasi lokal dan akan hilang jika halaman browser di-refresh.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let balance = 0;
+    let transactions = [];
+
+    function formatRupiah(number) {
+      return "Rp " + number.toLocaleString("id-ID");
+    }
+
+    function updateBalanceDisplay() {
+      document.getElementById("balanceDisplay").textContent = formatRupiah(balance);
+    }
+
+    function renderTransactions() {
+      const list = document.getElementById("transactionList");
+
+      if (transactions.length === 0) {
+        list.innerHTML = '<div class="empty-state">Belum ada transaksi</div>';
+        return;
+      }
+
+      list.innerHTML = transactions
+        .map((trx) => {
+          const amountClass = trx.type === "in" ? "amount-positive" : "amount-negative";
+          const sign = trx.type === "in" ? "+" : "-";
+
+          return `
+            <div class="transaction-item">
+              <div class="transaction-info">
+                <h4>${trx.title}</h4>
+                <p>${trx.time}</p>
+              </div>
+              <div class="${amountClass}">
+                ${sign} ${formatRupiah(trx.amount)}
+              </div>
+            </div>
+          `;
+        })
+        .join("");
+    }
+
+    function topUp() {
+      const amountInput = document.getElementById("topupAmount");
+      const amount = Number(amountInput.value);
+
+      if (!amount || amount <= 0) {
+        alert("Masukkan nominal top up yang valid.");
+        return;
+      }
+
+      balance += amount;
+
+      transactions.unshift({
+        title: "Top Up Saldo",
+        time: new Date().toLocaleString("id-ID"),
+        amount: amount,
+        type: "in"
+      });
+
+      amountInput.value = "";
+      updateBalanceDisplay();
+      renderTransactions();
+    }
+
+    function transfer() {
+      const targetNameInput = document.getElementById("targetName");
+      const amountInput = document.getElementById("transferAmount");
+
+      const targetName = targetNameInput.value.trim();
+      const amount = Number(amountInput.value);
+
+      if (!targetName) {
+        alert("Masukkan nama tujuan transfer.");
+        return;
+      }
+
+      if (!amount || amount <= 0) {
+        alert("Masukkan nominal transfer yang valid.");
+        return;
+      }
+
+      if (amount > balance) {
+        alert("Saldo tidak cukup.");
+        return;
+      }
+
+      balance -= amount;
+
+      transactions.unshift({
+        title: "Transfer ke " + targetName,
+        time: new Date().toLocaleString("id-ID"),
+        amount: amount,
+        type: "out"
+      });
+
+      targetNameInput.value = "";
+      amountInput.value = "";
+      updateBalanceDisplay();
+      renderTransactions();
+    }
+
+    updateBalanceDisplay();
+    renderTransactions();
+  </script>
+</body>
+</html>
