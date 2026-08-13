@@ -39,7 +39,14 @@
       font-size: 22px;
     }
 
-    /* KARTU SALDO: KIRI = SALDO, KANAN = ICON DEPOSIT & WITHDRAW */
+    /* TANGGAL & JAM REAL TIME DI BAWAH JUDUL */
+    .datetime {
+      margin-top: 6px;
+      font-size: 13px;
+      opacity: 0.92;
+      letter-spacing: 0.3px;
+    }
+
     .balance-card {
       margin-top: 18px;
       background: rgba(255,255,255,0.14);
@@ -67,7 +74,6 @@
       font-weight: bold;
     }
 
-    /* AREA ICON DI SEBELAH KANAN */
     .balance-actions {
       display: flex;
       gap: 10px;
@@ -213,14 +219,15 @@
     <div class="header">
       <h1>XYZ Wallet</h1>
 
+      <!-- TANGGAL & JAM REAL TIME -->
+      <div class="datetime" id="datetimeDisplay">Memuat waktu...</div>
+
       <div class="balance-card">
-        <!-- KIRI: SALDO -->
         <div class="balance-left">
           <div class="balance-label">Saldo Anda</div>
           <div class="balance-value" id="balanceDisplay">Rp 0</div>
         </div>
 
-        <!-- KANAN: ICON DEPOSIT & WITHDRAW -->
         <div class="balance-actions">
           <button class="action-btn" onclick="goDeposit()" title="Deposit">
             <span class="icon-circle">
@@ -260,7 +267,7 @@
       <div class="section-title">Transfer Simulasi</div>
       <div class="card" id="transferCard">
         <label for="targetName">Nama Tujuan</label>
-        <input type="text" id="targetName" placeholder="Contoh: Nur Laili" />
+        <input type="text" id="targetName" placeholder="Contoh: Nurlaili" />
 
         <label for="transferAmount">Nominal Transfer</label>
         <input type="number" id="transferAmount" placeholder="Contoh: 20000" min="1" />
@@ -283,6 +290,35 @@
     let balance = 0;
     let transactions = [];
 
+    /* ========== JAM & TANGGAL REAL TIME ========== */
+    function updateDateTime() {
+      const now = new Date();
+
+      const namaHari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+      const namaBulan = [
+        "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+      ];
+
+      const hari = namaHari[now.getDay()];
+      const tanggal = now.getDate();
+      const bulan = namaBulan[now.getMonth()];
+      const tahun = now.getFullYear();
+
+      const jam = String(now.getHours()).padStart(2, "0");
+      const menit = String(now.getMinutes()).padStart(2, "0");
+      const detik = String(now.getSeconds()).padStart(2, "0");
+
+      document.getElementById("datetimeDisplay").textContent =
+        hari + ", " + tanggal + " " + bulan + " " + tahun +
+        " • " + jam + ":" + menit + ":" + detik;
+    }
+
+    // Jalankan langsung, lalu update otomatis setiap 1 detik
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+    /* ============================================== */
+
     function formatRupiah(number) {
       return "Rp " + number.toLocaleString("id-ID");
     }
@@ -291,14 +327,12 @@
       document.getElementById("balanceDisplay").textContent = formatRupiah(balance);
     }
 
-    /* Shortcut icon Deposit: fokus ke form Top Up */
     function goDeposit() {
       const input = document.getElementById("topupAmount");
       input.scrollIntoView({ behavior: "smooth", block: "center" });
       input.focus();
     }
 
-    /* Shortcut icon Withdraw: fokus ke form Transfer */
     function goWithdraw() {
       const input = document.getElementById("targetName");
       input.scrollIntoView({ behavior: "smooth", block: "center" });
