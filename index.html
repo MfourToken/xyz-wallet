@@ -29,7 +29,6 @@
       box-shadow: 0 10px 30px rgba(0,0,0,0.12);
     }
 
-    /* HEADER SEKARANG WARNA MERAH */
     .header {
       background: linear-gradient(135deg, #b91c1c, #ef4444);
       color: white;
@@ -40,11 +39,21 @@
       font-size: 22px;
     }
 
+    /* KARTU SALDO: KIRI = SALDO, KANAN = ICON DEPOSIT & WITHDRAW */
     .balance-card {
       margin-top: 18px;
       background: rgba(255,255,255,0.14);
       border-radius: 18px;
       padding: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .balance-left {
+      flex: 1;
+      text-align: left;
     }
 
     .balance-label {
@@ -54,8 +63,44 @@
     }
 
     .balance-value {
-      font-size: 32px;
+      font-size: 30px;
       font-weight: bold;
+    }
+
+    /* AREA ICON DI SEBELAH KANAN */
+    .balance-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .action-btn {
+      width: 76px;
+      background: rgba(255,255,255,0.18);
+      border: none;
+      border-radius: 14px;
+      padding: 10px 6px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .action-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .icon-circle {
+      width: 34px;
+      height: 34px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .content {
@@ -108,7 +153,6 @@
       margin-bottom: 8px;
     }
 
-    /* TOMBOL TRANSFER SEKARANG MERAH */
     .btn-transfer {
       background: #dc2626;
       color: white;
@@ -170,21 +214,51 @@
       <h1>XYZ Wallet</h1>
 
       <div class="balance-card">
-        <div class="balance-label">Saldo Anda</div>
-        <div class="balance-value" id="balanceDisplay">Rp 0</div>
+        <!-- KIRI: SALDO -->
+        <div class="balance-left">
+          <div class="balance-label">Saldo Anda</div>
+          <div class="balance-value" id="balanceDisplay">Rp 0</div>
+        </div>
+
+        <!-- KANAN: ICON DEPOSIT & WITHDRAW -->
+        <div class="balance-actions">
+          <button class="action-btn" onclick="goDeposit()" title="Deposit">
+            <span class="icon-circle">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="#b91c1c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3v12"/>
+                <path d="M6 11l6 6 6-6"/>
+                <path d="M5 21h14"/>
+              </svg>
+            </span>
+            Deposit
+          </button>
+
+          <button class="action-btn" onclick="goWithdraw()" title="Withdraw">
+            <span class="icon-circle">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="#b91c1c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 21V9"/>
+                <path d="M6 13l6-6 6 6"/>
+                <path d="M5 3h14"/>
+              </svg>
+            </span>
+            Withdraw
+          </button>
+        </div>
       </div>
     </div>
 
     <div class="content">
       <div class="section-title">Top Up Simulasi</div>
-      <div class="card">
+      <div class="card" id="topupCard">
         <label for="topupAmount">Nominal Top Up</label>
         <input type="number" id="topupAmount" placeholder="Contoh: 50000" min="1" />
         <button class="btn-topup" onclick="topUp()">Top Up</button>
       </div>
 
       <div class="section-title">Transfer Simulasi</div>
-      <div class="card">
+      <div class="card" id="transferCard">
         <label for="targetName">Nama Tujuan</label>
         <input type="text" id="targetName" placeholder="Contoh: Budi" />
 
@@ -215,6 +289,20 @@
 
     function updateBalanceDisplay() {
       document.getElementById("balanceDisplay").textContent = formatRupiah(balance);
+    }
+
+    /* Shortcut icon Deposit: fokus ke form Top Up */
+    function goDeposit() {
+      const input = document.getElementById("topupAmount");
+      input.scrollIntoView({ behavior: "smooth", block: "center" });
+      input.focus();
+    }
+
+    /* Shortcut icon Withdraw: fokus ke form Transfer */
+    function goWithdraw() {
+      const input = document.getElementById("targetName");
+      input.scrollIntoView({ behavior: "smooth", block: "center" });
+      input.focus();
     }
 
     function renderTransactions() {
