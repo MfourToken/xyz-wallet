@@ -24,7 +24,7 @@
       display: none !important;
     }
 
-    /* ========== HALAMAN LOGIN ========== */
+    /* ========== HALAMAN LOGIN & PIN ========== */
     .login-screen {
       width: 100%;
       display: flex;
@@ -104,6 +104,83 @@
       padding: 10px;
       font-size: 12px;
       margin-bottom: 14px;
+    }
+
+    /* ========== POPUP / MODAL ========== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 50;
+    }
+
+    .modal-card {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      width: 100%;
+      max-width: 340px;
+      text-align: center;
+    }
+
+    .modal-card h3 {
+      margin-bottom: 14px;
+      color: #111827;
+    }
+
+    .modal-card input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      font-size: 14px;
+      text-align: center;
+      letter-spacing: 2px;
+    }
+
+    .modal-card button {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      background: #dc2626;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #e5e7eb !important;
+      color: #374151 !important;
+      margin-top: 8px;
+    }
+
+    #qrCanvas {
+      display: block;
+      margin: 0 auto 8px;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+    }
+
+    .qr-note {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-bottom: 14px;
+    }
+
+    .modal-card label {
+      display: block;
+      text-align: left;
+      font-size: 13px;
+      color: #4b5563;
+      margin-bottom: 6px;
     }
 
     /* ========== APLIKASI UTAMA ========== */
@@ -189,7 +266,7 @@
     }
 
     .action-btn {
-      width: 76px;
+      width: 70px;
       background: rgba(255,255,255,0.18);
       border: none;
       border-radius: 14px;
@@ -346,6 +423,23 @@
     </div>
   </div>
 
+  <!-- ========== HALAMAN BUAT PIN ========== -->
+  <div class="login-screen hidden" id="pinSetupScreen">
+    <div class="login-card">
+      <div class="login-logo">PIN</div>
+      <h2>Buat PIN Transaksi</h2>
+      <p class="login-subtitle">PIN 6 digit digunakan untuk mengamankan transaksimu</p>
+
+      <label for="newPinInput">PIN Baru (6 digit)</label>
+      <input type="password" id="newPinInput" maxlength="6" inputmode="numeric" placeholder="******" />
+
+      <label for="confirmPinInput">Ulangi PIN</label>
+      <input type="password" id="confirmPinInput" maxlength="6" inputmode="numeric" placeholder="******" />
+
+      <button onclick="savePin()">Simpan PIN</button>
+    </div>
+  </div>
+
   <!-- ========== APLIKASI UTAMA ========== -->
   <div class="app hidden" id="appScreen">
     <div class="header">
@@ -386,6 +480,20 @@
             </span>
             Withdraw
           </button>
+
+          <button class="action-btn" onclick="openQris()" title="QRIS">
+            <span class="icon-circle">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="#b91c1c" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"/>
+                <rect x="14" y="3" width="7" height="7"/>
+                <rect x="3" y="14" width="7" height="7"/>
+                <path d="M14 14h3v3h-3z"/>
+                <path d="M18 18h3v3h-3z"/>
+              </svg>
+            </span>
+            QRIS
+          </button>
         </div>
       </div>
     </div>
@@ -406,7 +514,7 @@
         <label for="transferAmount">Nominal Transfer</label>
         <input type="number" id="transferAmount" placeholder="Contoh: 20000" min="1" />
 
-        <button class="btn-transfer" onclick="transfer()">Transfer</button>
+        <button class="btn-transfer" onclick="startTransfer()">Transfer</button>
       </div>
 
       <div class="section-title">Riwayat Transaksi</div>
@@ -415,8 +523,36 @@
       </div>
 
       <div class="footer-note">
-        Semua data hanya simulasi lokal dan akan hilang jika halaman browser di-refresh.
+        XYZ Wallet – Mode Simulasi. Data tersimpan lokal di perangkat ini.
       </div>
+    </div>
+  </div>
+
+  <!-- ========== POPUP QRIS ========== -->
+  <div class="modal-overlay hidden" id="qrisModal">
+    <div class="modal-card">
+      <h3>Bayar dengan QRIS</h3>
+      <canvas id="qrCanvas" width="168" height="168"></canvas>
+      <p class="qr-note">QR demo untuk tampilan saja</p>
+
+      <label for="merchantInput">Nama Merchant</label>
+      <input id="merchantInput" value="Kopi XYZ" style="text-align:left; letter-spacing:0;" />
+
+      <label for="qrisAmount">Nominal Pembayaran</label>
+      <input type="number" id="qrisAmount" placeholder="Contoh: 25000" min="1" />
+
+      <button onclick="payQris()">Bayar</button>
+      <button class="btn-secondary" onclick="closeQris()">Batal</button>
+    </div>
+  </div>
+
+  <!-- ========== POPUP PIN ========== -->
+  <div class="modal-overlay hidden" id="pinModal">
+    <div class="modal-card">
+      <h3>Masukkan PIN Transaksi</h3>
+      <input type="password" id="pinModalInput" maxlength="6" inputmode="numeric" placeholder="******" />
+      <button onclick="confirmPin()">Konfirmasi</button>
+      <button class="btn-secondary" onclick="closePinModal()">Batal</button>
     </div>
   </div>
 
@@ -424,6 +560,22 @@
     let balance = 0;
     let transactions = [];
     let generatedOtp = null;
+    let pendingAction = null;
+
+    /* ========== SIMPAN & MUAT DATA (localStorage) ========== */
+    function saveState() {
+      localStorage.setItem("xyz_balance", String(balance));
+      localStorage.setItem("xyz_transactions", JSON.stringify(transactions));
+    }
+
+    function loadState() {
+      balance = Number(localStorage.getItem("xyz_balance") || 0);
+      try {
+        transactions = JSON.parse(localStorage.getItem("xyz_transactions") || "[]");
+      } catch (e) {
+        transactions = [];
+      }
+    }
 
     /* ========== LOGIN OTP SIMULASI ========== */
     function sendOtp() {
@@ -435,11 +587,7 @@
       }
 
       generatedOtp = String(Math.floor(100000 + Math.random() * 900000));
-
-      // Karena ini demo tanpa SMS, OTP ditampilkan di layar
-      document.getElementById("otpDemoNote").textContent =
-        "OTP demo Anda: " + generatedOtp;
-
+      document.getElementById("otpDemoNote").textContent = "OTP demo Anda: " + generatedOtp;
       document.getElementById("otpSection").classList.remove("hidden");
     }
 
@@ -448,7 +596,13 @@
 
       if (code === generatedOtp && generatedOtp !== null) {
         document.getElementById("loginScreen").classList.add("hidden");
-        document.getElementById("appScreen").classList.remove("hidden");
+
+        // Jika belum punya PIN, wajib buat PIN dulu
+        if (!localStorage.getItem("xyz_pin")) {
+          document.getElementById("pinSetupScreen").classList.remove("hidden");
+        } else {
+          document.getElementById("appScreen").classList.remove("hidden");
+        }
       } else {
         alert("Kode OTP salah. Coba lagi.");
       }
@@ -462,6 +616,51 @@
       generatedOtp = null;
     }
 
+    /* ========== BUAT PIN ========== */
+    function savePin() {
+      const pin1 = document.getElementById("newPinInput").value.trim();
+      const pin2 = document.getElementById("confirmPinInput").value.trim();
+
+      if (!/^[0-9]{6}$/.test(pin1)) {
+        alert("PIN harus 6 digit angka.");
+        return;
+      }
+      if (pin1 !== pin2) {
+        alert("Konfirmasi PIN tidak sama.");
+        return;
+      }
+
+      localStorage.setItem("xyz_pin", pin1);
+      document.getElementById("pinSetupScreen").classList.add("hidden");
+      document.getElementById("appScreen").classList.remove("hidden");
+      alert("PIN berhasil dibuat!");
+    }
+
+    /* ========== MODAL PIN TRANSAKSI ========== */
+    function requestPin(actionFn) {
+      pendingAction = actionFn;
+      document.getElementById("pinModalInput").value = "";
+      document.getElementById("pinModal").classList.remove("hidden");
+      document.getElementById("pinModalInput").focus();
+    }
+
+    function confirmPin() {
+      const input = document.getElementById("pinModalInput").value.trim();
+      const saved = localStorage.getItem("xyz_pin");
+
+      if (input === saved) {
+        closePinModal();
+        if (pendingAction) pendingAction();
+        pendingAction = null;
+      } else {
+        alert("PIN salah.");
+      }
+    }
+
+    function closePinModal() {
+      document.getElementById("pinModal").classList.add("hidden");
+    }
+
     /* ========== JAM & TANGGAL REAL TIME ========== */
     function updateDateTime() {
       const now = new Date();
@@ -472,18 +671,13 @@
         "Juli", "Agustus", "September", "Oktober", "November", "Desember"
       ];
 
-      const hari = namaHari[now.getDay()];
-      const tanggal = now.getDate();
-      const bulan = namaBulan[now.getMonth()];
-      const tahun = now.getFullYear();
-
-      const jam = String(now.getHours()).padStart(2, "0");
-      const menit = String(now.getMinutes()).padStart(2, "0");
-      const detik = String(now.getSeconds()).padStart(2, "0");
-
       document.getElementById("datetimeDisplay").textContent =
-        hari + ", " + tanggal + " " + bulan + " " + tahun +
-        " • " + jam + ":" + menit + ":" + detik;
+        namaHari[now.getDay()] + ", " + now.getDate() + " " +
+        namaBulan[now.getMonth()] + " " + now.getFullYear() +
+        " • " +
+        String(now.getHours()).padStart(2, "0") + ":" +
+        String(now.getMinutes()).padStart(2, "0") + ":" +
+        String(now.getSeconds()).padStart(2, "0");
     }
 
     updateDateTime();
@@ -559,45 +753,118 @@
       amountInput.value = "";
       updateBalanceDisplay();
       renderTransactions();
+      saveState();
     }
 
-    function transfer() {
-      const targetNameInput = document.getElementById("targetName");
-      const amountInput = document.getElementById("transferAmount");
+    /* Transfer: validasi dulu, lalu minta PIN */
+    function startTransfer() {
+      const targetName = document.getElementById("targetName").value.trim();
+      const amount = Number(document.getElementById("transferAmount").value);
 
-      const targetName = targetNameInput.value.trim();
-      const amount = Number(amountInput.value);
+      if (!targetName) { alert("Masukkan nama tujuan transfer."); return; }
+      if (!amount || amount <= 0) { alert("Masukkan nominal transfer yang valid."); return; }
+      if (amount > balance) { alert("Saldo tidak cukup."); return; }
 
-      if (!targetName) {
-        alert("Masukkan nama tujuan transfer.");
-        return;
-      }
+      requestPin(function () {
+        balance -= amount;
 
-      if (!amount || amount <= 0) {
-        alert("Masukkan nominal transfer yang valid.");
-        return;
-      }
+        transactions.unshift({
+          title: "Transfer ke " + targetName,
+          time: new Date().toLocaleString("id-ID"),
+          amount: amount,
+          type: "out"
+        });
 
-      if (amount > balance) {
-        alert("Saldo tidak cukup.");
-        return;
-      }
-
-      balance -= amount;
-
-      transactions.unshift({
-        title: "Transfer ke " + targetName,
-        time: new Date().toLocaleString("id-ID"),
-        amount: amount,
-        type: "out"
+        document.getElementById("targetName").value = "";
+        document.getElementById("transferAmount").value = "";
+        updateBalanceDisplay();
+        renderTransactions();
+        saveState();
+        alert("Transfer ke " + targetName + " berhasil!");
       });
-
-      targetNameInput.value = "";
-      amountInput.value = "";
-      updateBalanceDisplay();
-      renderTransactions();
     }
 
+    /* ========== QRIS DUMMY ========== */
+    function openQris() {
+      document.getElementById("qrisModal").classList.remove("hidden");
+      drawFakeQR();
+    }
+
+    function closeQris() {
+      document.getElementById("qrisModal").classList.add("hidden");
+    }
+
+    function payQris() {
+      const merchant = document.getElementById("merchantInput").value.trim() || "Merchant QRIS";
+      const amount = Number(document.getElementById("qrisAmount").value);
+
+      if (!amount || amount <= 0) { alert("Masukkan nominal pembayaran yang valid."); return; }
+      if (amount > balance) { alert("Saldo tidak cukup."); return; }
+
+      requestPin(function () {
+        balance -= amount;
+
+        transactions.unshift({
+          title: "QRIS: " + merchant,
+          time: new Date().toLocaleString("id-ID"),
+          amount: amount,
+          type: "out"
+        });
+
+        document.getElementById("qrisAmount").value = "";
+        closeQris();
+        updateBalanceDisplay();
+        renderTransactions();
+        saveState();
+        alert("Pembayaran QRIS ke " + merchant + " berhasil!");
+      });
+    }
+
+    /* Gambar QR palsu (hanya tampilan) */
+    function drawFakeQR() {
+      const canvas = document.getElementById("qrCanvas");
+      const ctx = canvas.getContext("2d");
+      const n = 21;
+      const size = canvas.width / n;
+
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#111111";
+
+      let seed = 42;
+      function rand() {
+        seed = (seed * 9301 + 49297) % 233280;
+        return seed / 233280;
+      }
+
+      function inFinder(r, c) {
+        return (r < 7 && c < 7) || (r < 7 && c >= n - 7) || (r >= n - 7 && c < 7);
+      }
+
+      function drawFinder(c0, r0) {
+        for (let r = 0; r < 7; r++) {
+          for (let c = 0; c < 7; c++) {
+            const edge = (r === 0 || r === 6 || c === 0 || c === 6);
+            const core = (r >= 2 && r <= 4 && c >= 2 && c <= 4);
+            if (edge || core) ctx.fillRect((c0 + c) * size, (r0 + r) * size, size, size);
+          }
+        }
+      }
+
+      for (let r = 0; r < n; r++) {
+        for (let c = 0; c < n; c++) {
+          if (inFinder(r, c)) continue;
+          if (rand() > 0.5) ctx.fillRect(c * size, r * size, size, size);
+        }
+      }
+
+      drawFinder(0, 0);
+      drawFinder(n - 7, 0);
+      drawFinder(0, n - 7);
+    }
+
+    /* ========== INIT ========== */
+    loadState();
     updateBalanceDisplay();
     renderTransactions();
   </script>
