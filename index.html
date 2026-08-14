@@ -78,6 +78,20 @@
 
     .hidden { display: none !important; }
 
+    /* ========== LOGO ========== */
+    .logo-img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+    }
+
+    .header-title { display: flex; align-items: center; gap: 10px; }
+    .header-logo {
+      width: 40px; height: 40px; border-radius: 50%;
+      box-shadow: 0 0 14px var(--glow-strong);
+    }
+
     /* ========== SPLASH SCREEN ========== */
     .splash {
       position: fixed; inset: 0; z-index: 200;
@@ -88,11 +102,12 @@
     .splash-hide { opacity: 0; pointer-events: none; }
 
     .splash-logo {
-      width: 90px; height: 90px; border-radius: 24px;
+      width: 110px; height: 110px; border-radius: 50%;
       background: linear-gradient(135deg, var(--grad2), var(--grad3));
       color: white; font-weight: bold; font-size: 30px;
       display: flex; align-items: center; justify-content: center;
       animation: splashPulse 1.4s ease infinite;
+      overflow: hidden;
     }
 
     .splash-name {
@@ -154,12 +169,13 @@
     }
 
     .login-logo {
-      width: 70px; height: 70px; border-radius: 20px;
+      width: 80px; height: 80px; border-radius: 50%;
       background: linear-gradient(135deg, var(--grad2), var(--grad3));
       color: white; font-weight: bold; font-size: 22px;
       display: flex; align-items: center; justify-content: center;
       margin: 0 auto 12px;
       box-shadow: 0 0 30px var(--glow-strong);
+      overflow: hidden;
     }
 
     .login-card h2 { margin-bottom: 4px; color: var(--text-main); letter-spacing: 1px; }
@@ -426,6 +442,7 @@
       display: flex; align-items: center; justify-content: center;
       margin: 0 auto 10px; color: white;
       box-shadow: 0 0 24px var(--glow-strong);
+      overflow: hidden;
     }
     .profile-card h3 { color: var(--text-main); margin-bottom: 4px; font-family: Consolas, Menlo, monospace; }
     .profile-card p { font-size: 12px; color: #94a3b8; }
@@ -466,7 +483,10 @@
 
   <!-- ========== SPLASH ========== -->
   <div class="splash" id="splashScreen">
-    <div class="splash-logo">XYZ</div>
+    <div class="splash-logo">
+      <img src="logo.png" alt="XYZ Wallet" class="logo-img"
+        onerror="var p=this.parentElement; this.remove(); p.textContent='XYZ';" />
+    </div>
     <div class="splash-name">XYZ Wallet</div>
     <div class="splash-loader"></div>
   </div>
@@ -477,9 +497,12 @@
   <!-- ========== HALAMAN LOGIN ========== -->
   <div class="login-screen" id="loginScreen">
     <div class="login-card">
-      <div class="login-logo">XYZ</div>
+      <div class="login-logo">
+        <img src="logo.png" alt="XYZ Wallet" class="logo-img"
+          onerror="var p=this.parentElement; this.remove(); p.textContent='XYZ';" />
+      </div>
       <h2>XYZ Wallet</h2>
-      <p class="login-subtitle">Masuk untuk melanjutkan</p>
+      <p class="login-subtitle">XYZ Secure Transactions</p>
 
       <label for="phoneInput">Nomor HP</label>
       <input type="tel" id="phoneInput" placeholder="Contoh: 08123456789" />
@@ -497,7 +520,10 @@
   <!-- ========== HALAMAN BUAT PIN ========== -->
   <div class="login-screen hidden" id="pinSetupScreen">
     <div class="login-card">
-      <div class="login-logo">PIN</div>
+      <div class="login-logo">
+        <img src="logo.png" alt="XYZ Wallet" class="logo-img"
+          onerror="var p=this.parentElement; this.remove(); p.textContent='PIN';" />
+      </div>
       <h2>Buat PIN Transaksi</h2>
       <p class="login-subtitle">PIN 6 digit digunakan untuk mengamankan transaksimu</p>
 
@@ -517,7 +543,10 @@
     <!-- ===== HOME ===== -->
     <div class="page" id="pageHome">
       <div class="header">
-        <h1>XYZ Wallet</h1>
+        <div class="header-title">
+          <img src="logo.png" alt="" class="header-logo" onerror="this.style.display='none'" />
+          <h1>XYZ Wallet</h1>
+        </div>
         <div class="datetime" id="datetimeDisplay">Memuat waktu...</div>
 
         <div class="balance-card">
@@ -586,7 +615,7 @@
           <div class="vcard-bottom">
             <div>
               <div class="vcard-label">Pemegang</div>
-              <div class="vcard-value">Fery muliawan</div>
+              <div class="vcard-value">PENGGUNA XYZ</div>
             </div>
             <div>
               <div class="vcard-label">Berlaku</div>
@@ -594,7 +623,7 @@
             </div>
             <div>
               <div class="vcard-label">CVV</div>
-              <div class="vcard-value">805</div>
+              <div class="vcard-value">•••</div>
             </div>
           </div>
         </div>
@@ -711,7 +740,8 @@
       <div class="content">
         <div class="card profile-card">
           <div class="profile-avatar">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+            <img src="logo.png" alt="" class="logo-img" onerror="this.style.display='none'" />
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" style="position:absolute;">
               <circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>
             </svg>
           </div>
@@ -803,7 +833,10 @@
   <!-- ========== POPUP STRUK ========== -->
   <div class="modal-overlay hidden" id="receiptModal">
     <div class="modal-card">
-      <div class="login-logo" style="width:46px;height:46px;font-size:14px;margin:0 auto 10px;">XYZ</div>
+      <div class="login-logo" style="width:56px;height:56px;font-size:14px;margin:0 auto 10px;">
+        <img src="logo.png" alt="XYZ Wallet" class="logo-img"
+          onerror="var p=this.parentElement; this.remove(); p.textContent='XYZ';" />
+      </div>
       <h3>Struk Transaksi</h3>
       <p class="receipt-status">✔ SUKSES</p>
 
