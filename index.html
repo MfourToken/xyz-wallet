@@ -6,12 +6,7 @@
   <title>XYZ Wallet</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
 
     body {
       background: #f3f5fb;
@@ -20,384 +15,168 @@
       padding: 20px;
     }
 
-    .hidden {
-      display: none !important;
-    }
+    .hidden { display: none !important; }
 
-    /* ========== HALAMAN LOGIN & PIN ========== */
-    .login-screen {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-    }
+    /* ========== LOGIN & PIN ========== */
+    .login-screen { width: 100%; display: flex; justify-content: center; }
 
     .login-card {
-      width: 100%;
-      max-width: 420px;
-      background: white;
-      border-radius: 24px;
-      padding: 32px 24px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-      text-align: center;
-      height: fit-content;
+      width: 100%; max-width: 420px; background: white; border-radius: 24px;
+      padding: 32px 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      text-align: center; height: fit-content;
     }
 
     .login-logo {
-      width: 70px;
-      height: 70px;
-      border-radius: 20px;
+      width: 70px; height: 70px; border-radius: 20px;
       background: linear-gradient(135deg, #b91c1c, #ef4444);
-      color: white;
-      font-weight: bold;
-      font-size: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 12px;
+      color: white; font-weight: bold; font-size: 22px;
+      display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;
     }
 
-    .login-card h2 {
-      margin-bottom: 4px;
-      color: #111827;
-    }
+    .login-card h2 { margin-bottom: 4px; color: #111827; }
+    .login-subtitle { font-size: 13px; color: #6b7280; margin-bottom: 24px; }
 
-    .login-subtitle {
-      font-size: 13px;
-      color: #6b7280;
-      margin-bottom: 24px;
-    }
-
-    .login-card label {
-      display: block;
-      text-align: left;
-      font-size: 13px;
-      color: #4b5563;
-      margin-bottom: 6px;
-    }
+    .login-card label { display: block; text-align: left; font-size: 13px; color: #4b5563; margin-bottom: 6px; }
 
     .login-card input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 12px;
-      margin-bottom: 14px;
-      font-size: 14px;
+      width: 100%; padding: 12px; border: 1px solid #d1d5db;
+      border-radius: 12px; margin-bottom: 14px; font-size: 14px;
     }
 
     .login-card button {
-      width: 100%;
-      border: none;
-      border-radius: 12px;
-      padding: 13px;
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-      background: #dc2626;
-      color: white;
+      width: 100%; border: none; border-radius: 12px; padding: 13px;
+      font-size: 14px; font-weight: bold; cursor: pointer; background: #dc2626; color: white;
     }
 
     .otp-demo-note {
-      background: #fef2f2;
-      border: 1px dashed #dc2626;
-      color: #b91c1c;
-      border-radius: 12px;
-      padding: 10px;
-      font-size: 12px;
-      margin-bottom: 14px;
+      background: #fef2f2; border: 1px dashed #dc2626; color: #b91c1c;
+      border-radius: 12px; padding: 10px; font-size: 12px; margin-bottom: 14px;
     }
 
-    /* ========== POPUP / MODAL ========== */
+    /* ========== MODAL ========== */
     .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      z-index: 50;
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 50;
     }
 
-    .modal-card {
-      background: white;
-      border-radius: 20px;
-      padding: 24px;
-      width: 100%;
-      max-width: 340px;
-      text-align: center;
-    }
-
-    .modal-card h3 {
-      margin-bottom: 14px;
-      color: #111827;
-    }
+    .modal-card { background: white; border-radius: 20px; padding: 24px; width: 100%; max-width: 340px; text-align: center; }
+    .modal-card h3 { margin-bottom: 14px; color: #111827; }
 
     .modal-card input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 12px;
-      margin-bottom: 12px;
-      font-size: 14px;
-      text-align: center;
-      letter-spacing: 2px;
+      width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 12px;
+      margin-bottom: 12px; font-size: 14px; text-align: center; letter-spacing: 2px;
     }
 
     .modal-card button {
-      width: 100%;
-      border: none;
-      border-radius: 12px;
-      padding: 12px;
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-      background: #dc2626;
-      color: white;
+      width: 100%; border: none; border-radius: 12px; padding: 12px;
+      font-size: 14px; font-weight: bold; cursor: pointer; background: #dc2626; color: white;
     }
 
-    .btn-secondary {
-      background: #e5e7eb !important;
-      color: #374151 !important;
-      margin-top: 8px;
-    }
-
-    #qrCanvas {
-      display: block;
-      margin: 0 auto 8px;
-      background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-    }
-
-    .qr-note {
-      font-size: 11px;
-      color: #9ca3af;
-      margin-bottom: 14px;
-    }
-
-    .modal-card label {
-      display: block;
-      text-align: left;
-      font-size: 13px;
-      color: #4b5563;
-      margin-bottom: 6px;
-    }
+    .btn-secondary { background: #e5e7eb !important; color: #374151 !important; margin-top: 8px; }
 
     /* ========== APLIKASI UTAMA ========== */
     .app {
-      width: 100%;
-      max-width: 420px;
-      background: white;
-      border-radius: 24px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-      height: fit-content;
+      width: 100%; max-width: 420px; background: white; border-radius: 24px;
+      overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.12); height: fit-content;
     }
 
-    .header {
-      background: linear-gradient(135deg, #b91c1c, #ef4444);
-      color: white;
-      padding: 24px 20px;
-    }
+    .header { background: linear-gradient(135deg, #b91c1c, #ef4444); color: white; padding: 24px 20px; }
+    .header h1 { font-size: 22px; }
 
-    .header-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .header h1 {
-      font-size: 22px;
-    }
-
-    .logout-btn {
-      width: auto;
-      padding: 6px 14px;
-      font-size: 11px;
-      background: rgba(255,255,255,0.2);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .logout-btn:hover {
-      background: rgba(255,255,255,0.35);
-    }
-
-    .datetime {
-      margin-top: 6px;
-      font-size: 13px;
-      opacity: 0.92;
-      letter-spacing: 0.3px;
-    }
+    .datetime { margin-top: 6px; font-size: 13px; opacity: 0.92; letter-spacing: 0.3px; }
 
     .balance-card {
-      margin-top: 18px;
-      background: rgba(255,255,255,0.14);
-      border-radius: 18px;
-      padding: 18px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
+      margin-top: 18px; background: rgba(255,255,255,0.14); border-radius: 18px; padding: 18px;
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
     }
 
-    .balance-left {
-      flex: 1;
-      text-align: left;
-    }
-
-    .balance-label {
-      font-size: 13px;
-      opacity: 0.85;
-      margin-bottom: 6px;
-    }
-
-    .balance-value {
-      font-size: 30px;
-      font-weight: bold;
-    }
-
-    .balance-actions {
-      display: flex;
-      gap: 10px;
-    }
+    .balance-left { flex: 1; text-align: left; }
+    .balance-label { font-size: 13px; opacity: 0.85; margin-bottom: 6px; }
+    .balance-value { font-size: 30px; font-weight: bold; }
+    .balance-actions { display: flex; gap: 10px; }
 
     .action-btn {
-      width: 70px;
-      background: rgba(255,255,255,0.18);
-      border: none;
-      border-radius: 14px;
-      padding: 10px 6px;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
-      cursor: pointer;
-      font-size: 11px;
-      font-weight: bold;
+      width: 70px; background: rgba(255,255,255,0.18); border: none; border-radius: 14px;
+      padding: 10px 6px; color: white; display: flex; flex-direction: column;
+      align-items: center; gap: 5px; cursor: pointer; font-size: 11px; font-weight: bold;
     }
-
-    .action-btn:hover {
-      background: rgba(255,255,255,0.3);
-    }
+    .action-btn:hover { background: rgba(255,255,255,0.3); }
 
     .icon-circle {
-      width: 34px;
-      height: 34px;
-      background: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 34px; height: 34px; background: white; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
     }
 
-    .content {
-      padding: 20px;
-    }
+    .page-header { background: linear-gradient(135deg, #b91c1c, #ef4444); color: white; padding: 20px; }
+    .page-header h2 { font-size: 20px; }
 
-    .section-title {
-      font-size: 15px;
-      font-weight: bold;
-      margin-bottom: 12px;
-    }
+    .content { padding: 20px; }
 
-    .card {
-      background: #ffffff;
-      border: 1px solid #e5e7eb;
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 16px;
-    }
+    .home-section-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .home-section-head .section-title { margin: 0; }
 
-    label {
-      display: block;
-      font-size: 13px;
-      color: #4b5563;
-      margin-bottom: 6px;
-    }
+    .link-btn { width: auto; background: none; color: #dc2626; font-size: 12px; padding: 0; }
+
+    .section-title { font-size: 15px; font-weight: bold; margin-bottom: 12px; }
+
+    .card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+
+    label { display: block; font-size: 13px; color: #4b5563; margin-bottom: 6px; }
 
     input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 12px;
-      margin-bottom: 12px;
-      font-size: 14px;
+      width: 100%; padding: 12px; border: 1px solid #d1d5db;
+      border-radius: 12px; margin-bottom: 12px; font-size: 14px;
     }
 
     button {
-      width: 100%;
-      border: none;
-      border-radius: 12px;
-      padding: 12px;
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
+      width: 100%; border: none; border-radius: 12px; padding: 12px;
+      font-size: 14px; font-weight: bold; cursor: pointer;
     }
 
-    .btn-topup {
-      background: #10b981;
-      color: white;
-      margin-bottom: 8px;
-    }
+    .btn-topup { background: #10b981; color: white; margin-bottom: 8px; }
+    .btn-transfer { background: #dc2626; color: white; }
 
-    .btn-transfer {
-      background: #dc2626;
-      color: white;
-    }
+    .btn-outline { background: white; color: #dc2626; border: 2px solid #dc2626; margin-bottom: 10px; }
 
-    .transaction-list {
-      max-height: 220px;
-      overflow-y: auto;
-    }
+    .transaction-list { max-height: 380px; overflow-y: auto; }
 
     .transaction-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px;
-      border-radius: 12px;
-      background: #f9fafb;
-      margin-bottom: 10px;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px; border-radius: 12px; background: #f9fafb; margin-bottom: 10px;
     }
 
-    .transaction-info h4 {
-      font-size: 14px;
-      margin-bottom: 4px;
+    .transaction-info h4 { font-size: 14px; margin-bottom: 4px; }
+    .transaction-info p { font-size: 12px; color: #6b7280; }
+
+    .amount-positive { color: #059669; font-weight: bold; }
+    .amount-negative { color: #dc2626; font-weight: bold; }
+
+    .empty-state { text-align: center; color: #9ca3af; font-size: 13px; padding: 20px 0; }
+
+    #qrCanvas { display: block; margin: 0 auto 8px; background: white; border: 1px solid #e5e7eb; border-radius: 12px; }
+    .qr-note { font-size: 11px; color: #9ca3af; margin-bottom: 14px; text-align: center; }
+
+    .profile-card { text-align: center; }
+    .profile-avatar {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: linear-gradient(135deg, #b91c1c, #ef4444);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 10px; color: white;
+    }
+    .profile-card h3 { color: #111827; margin-bottom: 4px; }
+    .profile-card p { font-size: 12px; color: #6b7280; }
+
+    /* ========== BOTTOM NAVIGATION ========== */
+    .bottom-nav { display: flex; border-top: 1px solid #e5e7eb; background: white; }
+
+    .nav-item {
+      flex: 1; background: none; border: none; padding: 10px 4px 8px;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      font-size: 9px; color: #9ca3af; cursor: pointer; font-weight: bold;
     }
 
-    .transaction-info p {
-      font-size: 12px;
-      color: #6b7280;
-    }
-
-    .amount-positive {
-      color: #059669;
-      font-weight: bold;
-    }
-
-    .amount-negative {
-      color: #dc2626;
-      font-weight: bold;
-    }
-
-    .empty-state {
-      text-align: center;
-      color: #9ca3af;
-      font-size: 13px;
-      padding: 20px 0;
-    }
-
-    .footer-note {
-      margin-top: 10px;
-      font-size: 11px;
-      color: #9ca3af;
-      text-align: center;
-    }
+    .nav-item.active { color: #dc2626; }
+    .nav-item svg { width: 20px; height: 20px; }
   </style>
 </head>
 <body>
@@ -415,7 +194,6 @@
 
       <div id="otpSection" class="hidden" style="margin-top: 18px;">
         <div class="otp-demo-note" id="otpDemoNote"></div>
-
         <label for="otpInput">Kode OTP</label>
         <input type="text" id="otpInput" maxlength="6" placeholder="Masukkan 6 digit OTP" />
         <button onclick="login()">Masuk</button>
@@ -442,111 +220,175 @@
 
   <!-- ========== APLIKASI UTAMA ========== -->
   <div class="app hidden" id="appScreen">
-    <div class="header">
-      <div class="header-top">
+
+    <!-- ===== HALAMAN HOME ===== -->
+    <div class="page" id="pageHome">
+      <div class="header">
         <h1>XYZ Wallet</h1>
-        <button class="logout-btn" onclick="logout()">Keluar</button>
+        <div class="datetime" id="datetimeDisplay">Memuat waktu...</div>
+
+        <div class="balance-card">
+          <div class="balance-left">
+            <div class="balance-label">Saldo Anda</div>
+            <div class="balance-value" id="balanceDisplay">Rp 0</div>
+          </div>
+
+          <div class="balance-actions">
+            <button class="action-btn" onclick="goDeposit()" title="Deposit">
+              <span class="icon-circle">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 3v12"/><path d="M6 11l6 6 6-6"/><path d="M5 21h14"/>
+                </svg>
+              </span>
+              Deposit
+            </button>
+
+            <button class="action-btn" onclick="goWithdraw()" title="Withdraw">
+              <span class="icon-circle">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 21V9"/><path d="M6 13l6-6 6 6"/><path d="M5 3h14"/>
+                </svg>
+              </span>
+              Withdraw
+            </button>
+
+            <button class="action-btn" onclick="switchTab('qris')" title="QRIS">
+              <span class="icon-circle">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                  <rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/><path d="M18 18h3v3h-3z"/>
+                </svg>
+              </span>
+              QRIS
+            </button>
+          </div>
+        </div>
       </div>
 
-      <div class="datetime" id="datetimeDisplay">Memuat waktu...</div>
-
-      <div class="balance-card">
-        <div class="balance-left">
-          <div class="balance-label">Saldo Anda</div>
-          <div class="balance-value" id="balanceDisplay">Rp 0</div>
+      <div class="content">
+        <div class="home-section-head">
+          <div class="section-title">Transaksi Terakhir</div>
+          <button class="link-btn" onclick="switchTab('aktivitas')">Lihat Semua</button>
         </div>
-
-        <div class="balance-actions">
-          <button class="action-btn" onclick="goDeposit()" title="Deposit">
-            <span class="icon-circle">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                stroke="#b91c1c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 3v12"/>
-                <path d="M6 11l6 6 6-6"/>
-                <path d="M5 21h14"/>
-              </svg>
-            </span>
-            Deposit
-          </button>
-
-          <button class="action-btn" onclick="goWithdraw()" title="Withdraw">
-            <span class="icon-circle">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                stroke="#b91c1c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 21V9"/>
-                <path d="M6 13l6-6 6 6"/>
-                <path d="M5 3h14"/>
-              </svg>
-            </span>
-            Withdraw
-          </button>
-
-          <button class="action-btn" onclick="openQris()" title="QRIS">
-            <span class="icon-circle">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                stroke="#b91c1c" stroke-width="2">
-                <rect x="3" y="3" width="7" height="7"/>
-                <rect x="14" y="3" width="7" height="7"/>
-                <rect x="3" y="14" width="7" height="7"/>
-                <path d="M14 14h3v3h-3z"/>
-                <path d="M18 18h3v3h-3z"/>
-              </svg>
-            </span>
-            QRIS
-          </button>
+        <div id="homeTransactionList">
+          <div class="empty-state">Belum ada transaksi</div>
         </div>
       </div>
     </div>
 
-    <div class="content">
-      <div class="section-title">Top Up Simulasi</div>
-      <div class="card" id="topupCard">
-        <label for="topupAmount">Nominal Top Up</label>
-        <input type="number" id="topupAmount" placeholder="Contoh: 50000" min="1" />
-        <button class="btn-topup" onclick="topUp()">Top Up</button>
-      </div>
-
-      <div class="section-title">Transfer Simulasi</div>
-      <div class="card" id="transferCard">
-        <label for="targetName">Nama Tujuan</label>
-        <input type="text" id="targetName" placeholder="Contoh: Nurlaili" />
-
-        <label for="transferAmount">Nominal Transfer</label>
-        <input type="number" id="transferAmount" placeholder="Contoh: 20000" min="1" />
-
-        <button class="btn-transfer" onclick="startTransfer()">Transfer</button>
-      </div>
-
-      <div class="section-title">Riwayat Transaksi</div>
-      <div class="transaction-list" id="transactionList">
-        <div class="empty-state">Belum ada transaksi</div>
-      </div>
-
-      <div class="footer-note">
-        XYZ Wallet – Mode Simulasi. Data tersimpan lokal di perangkat ini.
+    <!-- ===== HALAMAN AKTIVITAS ===== -->
+    <div class="page hidden" id="pageAktivitas">
+      <div class="page-header"><h2>Aktivitas</h2></div>
+      <div class="content">
+        <div class="transaction-list" id="transactionList">
+          <div class="empty-state">Belum ada transaksi</div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- ========== POPUP QRIS ========== -->
-  <div class="modal-overlay hidden" id="qrisModal">
-    <div class="modal-card">
-      <h3>Bayar dengan QRIS</h3>
-      <canvas id="qrCanvas" width="168" height="168"></canvas>
-      <p class="qr-note">QR demo untuk tampilan saja</p>
+    <!-- ===== HALAMAN QRIS ===== -->
+    <div class="page hidden" id="pageQris">
+      <div class="page-header"><h2>QRIS</h2></div>
+      <div class="content">
+        <div class="card">
+          <canvas id="qrCanvas" width="168" height="168"></canvas>
+          <p class="qr-note">QR demo untuk tampilan saja</p>
 
-      <label for="merchantInput">Nama Merchant</label>
-      <input id="merchantInput" value="Kopi XYZ" style="text-align:left; letter-spacing:0;" />
+          <label for="merchantInput">Nama Merchant</label>
+          <input id="merchantInput" value="Kopi XYZ" />
 
-      <label for="qrisAmount">Nominal Pembayaran</label>
-      <input type="number" id="qrisAmount" placeholder="Contoh: 25000" min="1" />
+          <label for="qrisAmount">Nominal Pembayaran</label>
+          <input type="number" id="qrisAmount" placeholder="Contoh: 25000" min="1" />
 
-      <button onclick="payQris()">Bayar</button>
-      <button class="btn-secondary" onclick="closeQris()">Batal</button>
+          <button class="btn-transfer" onclick="payQris()">Bayar</button>
+        </div>
+      </div>
     </div>
+
+    <!-- ===== HALAMAN DOMPET ===== -->
+    <div class="page hidden" id="pageDompet">
+      <div class="page-header"><h2>Dompet</h2></div>
+      <div class="content">
+        <div class="section-title">Top Up Simulasi</div>
+        <div class="card">
+          <label for="topupAmount">Nominal Top Up</label>
+          <input type="number" id="topupAmount" placeholder="Contoh: 50000" min="1" />
+          <button class="btn-topup" onclick="topUp()">Top Up</button>
+        </div>
+
+        <div class="section-title">Transfer Simulasi</div>
+        <div class="card">
+          <label for="targetName">Nama Tujuan</label>
+          <input type="text" id="targetName" placeholder="Contoh: Nurlaili" />
+
+          <label for="transferAmount">Nominal Transfer</label>
+          <input type="number" id="transferAmount" placeholder="Contoh: 20000" min="1" />
+
+          <button class="btn-transfer" onclick="startTransfer()">Transfer</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== HALAMAN PROFIL ===== -->
+    <div class="page hidden" id="pageProfil">
+      <div class="page-header"><h2>Profil</h2></div>
+      <div class="content">
+        <div class="card profile-card">
+          <div class="profile-avatar">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+              <circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>
+            </svg>
+          </div>
+          <h3 id="profilePhone">-</h3>
+          <p>Pengguna XYZ Wallet</p>
+        </div>
+
+        <button class="btn-outline" onclick="openPinChange()">Ganti PIN Transaksi</button>
+        <button class="btn-transfer" onclick="logout()">Keluar</button>
+      </div>
+    </div>
+
+    <!-- ===== BOTTOM NAVIGATION ===== -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" id="nav-home" onclick="switchTab('home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/>
+        </svg>
+        HOME
+      </button>
+
+      <button class="nav-item" id="nav-aktivitas" onclick="switchTab('aktivitas')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>
+        </svg>
+        AKTIVITAS
+      </button>
+
+      <button class="nav-item" id="nav-qris" onclick="switchTab('qris')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/><path d="M18 18h3v3h-3z"/>
+        </svg>
+        QRIS
+      </button>
+
+      <button class="nav-item" id="nav-dompet" onclick="switchTab('dompet')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <rect x="3" y="6" width="18" height="14" rx="3"/><path d="M3 10h18"/><path d="M15 15h3"/>
+        </svg>
+        DOMPET
+      </button>
+
+      <button class="nav-item" id="nav-profil" onclick="switchTab('profil')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>
+        </svg>
+        PROFIL
+      </button>
+    </nav>
   </div>
 
-  <!-- ========== POPUP PIN ========== -->
+  <!-- ========== POPUP PIN TRANSAKSI ========== -->
   <div class="modal-overlay hidden" id="pinModal">
     <div class="modal-card">
       <h3>Masukkan PIN Transaksi</h3>
@@ -556,13 +398,25 @@
     </div>
   </div>
 
+  <!-- ========== POPUP GANTI PIN ========== -->
+  <div class="modal-overlay hidden" id="pinChangeModal">
+    <div class="modal-card">
+      <h3>Ganti PIN</h3>
+      <input type="password" id="oldPinInput" maxlength="6" placeholder="PIN lama" />
+      <input type="password" id="newPinChangeInput" maxlength="6" placeholder="PIN baru 6 digit" />
+      <input type="password" id="confirmPinChangeInput" maxlength="6" placeholder="Ulangi PIN baru" />
+      <button onclick="changePin()">Simpan</button>
+      <button class="btn-secondary" onclick="closePinChange()">Batal</button>
+    </div>
+  </div>
+
   <script>
     let balance = 0;
     let transactions = [];
     let generatedOtp = null;
     let pendingAction = null;
 
-    /* ========== SIMPAN & MUAT DATA (localStorage) ========== */
+    /* ========== DATA LOKAL ========== */
     function saveState() {
       localStorage.setItem("xyz_balance", String(balance));
       localStorage.setItem("xyz_transactions", JSON.stringify(transactions));
@@ -570,22 +424,35 @@
 
     function loadState() {
       balance = Number(localStorage.getItem("xyz_balance") || 0);
-      try {
-        transactions = JSON.parse(localStorage.getItem("xyz_transactions") || "[]");
-      } catch (e) {
-        transactions = [];
-      }
+      try { transactions = JSON.parse(localStorage.getItem("xyz_transactions") || "[]"); }
+      catch (e) { transactions = []; }
     }
 
-    /* ========== LOGIN OTP SIMULASI ========== */
+    /* ========== NAVIGASI TAB ========== */
+    function switchTab(tab) {
+      ["pageHome", "pageAktivitas", "pageQris", "pageDompet", "pageProfil"]
+        .forEach(id => document.getElementById(id).classList.add("hidden"));
+
+      const map = {
+        home: "pageHome", aktivitas: "pageAktivitas", qris: "pageQris",
+        dompet: "pageDompet", profil: "pageProfil"
+      };
+      document.getElementById(map[tab]).classList.remove("hidden");
+
+      document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
+      document.getElementById("nav-" + tab).classList.add("active");
+
+      if (tab === "qris") drawFakeQR();
+      if (tab === "profil") renderProfile();
+    }
+
+    /* ========== LOGIN ========== */
     function sendOtp() {
       const phone = document.getElementById("phoneInput").value.trim();
-
       if (!/^0[0-9]{9,12}$/.test(phone)) {
         alert("Masukkan nomor HP yang valid (diawali 0, 10-13 digit).");
         return;
       }
-
       generatedOtp = String(Math.floor(100000 + Math.random() * 900000));
       document.getElementById("otpDemoNote").textContent = "OTP demo Anda: " + generatedOtp;
       document.getElementById("otpSection").classList.remove("hidden");
@@ -593,15 +460,15 @@
 
     function login() {
       const code = document.getElementById("otpInput").value.trim();
-
       if (code === generatedOtp && generatedOtp !== null) {
+        localStorage.setItem("xyz_phone", document.getElementById("phoneInput").value.trim());
         document.getElementById("loginScreen").classList.add("hidden");
 
-        // Jika belum punya PIN, wajib buat PIN dulu
         if (!localStorage.getItem("xyz_pin")) {
           document.getElementById("pinSetupScreen").classList.remove("hidden");
         } else {
           document.getElementById("appScreen").classList.remove("hidden");
+          switchTab("home");
         }
       } else {
         alert("Kode OTP salah. Coba lagi.");
@@ -616,24 +483,42 @@
       generatedOtp = null;
     }
 
-    /* ========== BUAT PIN ========== */
+    /* ========== BUAT & GANTI PIN ========== */
     function savePin() {
       const pin1 = document.getElementById("newPinInput").value.trim();
       const pin2 = document.getElementById("confirmPinInput").value.trim();
-
-      if (!/^[0-9]{6}$/.test(pin1)) {
-        alert("PIN harus 6 digit angka.");
-        return;
-      }
-      if (pin1 !== pin2) {
-        alert("Konfirmasi PIN tidak sama.");
-        return;
-      }
-
+      if (!/^[0-9]{6}$/.test(pin1)) { alert("PIN harus 6 digit angka."); return; }
+      if (pin1 !== pin2) { alert("Konfirmasi PIN tidak sama."); return; }
       localStorage.setItem("xyz_pin", pin1);
       document.getElementById("pinSetupScreen").classList.add("hidden");
       document.getElementById("appScreen").classList.remove("hidden");
+      switchTab("home");
       alert("PIN berhasil dibuat!");
+    }
+
+    function openPinChange() {
+      document.getElementById("oldPinInput").value = "";
+      document.getElementById("newPinChangeInput").value = "";
+      document.getElementById("confirmPinChangeInput").value = "";
+      document.getElementById("pinChangeModal").classList.remove("hidden");
+    }
+
+    function closePinChange() {
+      document.getElementById("pinChangeModal").classList.add("hidden");
+    }
+
+    function changePin() {
+      const oldP = document.getElementById("oldPinInput").value.trim();
+      const newP = document.getElementById("newPinChangeInput").value.trim();
+      const conf = document.getElementById("confirmPinChangeInput").value.trim();
+
+      if (oldP !== localStorage.getItem("xyz_pin")) { alert("PIN lama salah."); return; }
+      if (!/^[0-9]{6}$/.test(newP)) { alert("PIN baru harus 6 digit angka."); return; }
+      if (newP !== conf) { alert("Konfirmasi PIN tidak sama."); return; }
+
+      localStorage.setItem("xyz_pin", newP);
+      closePinChange();
+      alert("PIN berhasil diganti!");
     }
 
     /* ========== MODAL PIN TRANSAKSI ========== */
@@ -646,9 +531,7 @@
 
     function confirmPin() {
       const input = document.getElementById("pinModalInput").value.trim();
-      const saved = localStorage.getItem("xyz_pin");
-
-      if (input === saved) {
+      if (input === localStorage.getItem("xyz_pin")) {
         closePinModal();
         if (pendingAction) pendingAction();
         pendingAction = null;
@@ -661,102 +544,79 @@
       document.getElementById("pinModal").classList.add("hidden");
     }
 
-    /* ========== JAM & TANGGAL REAL TIME ========== */
+    /* ========== JAM REAL TIME ========== */
     function updateDateTime() {
       const now = new Date();
-
       const namaHari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-      const namaBulan = [
-        "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-      ];
+      const namaBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni",
+        "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
       document.getElementById("datetimeDisplay").textContent =
-        namaHari[now.getDay()] + ", " + now.getDate() + " " +
-        namaBulan[now.getMonth()] + " " + now.getFullYear() +
-        " • " +
+        namaHari[now.getDay()] + ", " + now.getDate() + " " + namaBulan[now.getMonth()] +
+        " " + now.getFullYear() + " • " +
         String(now.getHours()).padStart(2, "0") + ":" +
         String(now.getMinutes()).padStart(2, "0") + ":" +
         String(now.getSeconds()).padStart(2, "0");
     }
-
     updateDateTime();
     setInterval(updateDateTime, 1000);
 
-    /* ========== FUNGSI DOMPET ========== */
-    function formatRupiah(number) {
-      return "Rp " + number.toLocaleString("id-ID");
-    }
+    /* ========== DOMPET ========== */
+    function formatRupiah(number) { return "Rp " + number.toLocaleString("id-ID"); }
 
     function updateBalanceDisplay() {
       document.getElementById("balanceDisplay").textContent = formatRupiah(balance);
     }
 
     function goDeposit() {
-      const input = document.getElementById("topupAmount");
-      input.scrollIntoView({ behavior: "smooth", block: "center" });
-      input.focus();
+      switchTab("dompet");
+      setTimeout(() => document.getElementById("topupAmount").focus(), 100);
     }
 
     function goWithdraw() {
-      const input = document.getElementById("targetName");
-      input.scrollIntoView({ behavior: "smooth", block: "center" });
-      input.focus();
+      switchTab("dompet");
+      setTimeout(() => document.getElementById("targetName").focus(), 100);
+    }
+
+    function transactionItemHTML(trx) {
+      const amountClass = trx.type === "in" ? "amount-positive" : "amount-negative";
+      const sign = trx.type === "in" ? "+" : "-";
+      return `
+        <div class="transaction-item">
+          <div class="transaction-info">
+            <h4>${trx.title}</h4>
+            <p>${trx.time}</p>
+          </div>
+          <div class="${amountClass}">${sign} ${formatRupiah(trx.amount)}</div>
+        </div>`;
     }
 
     function renderTransactions() {
       const list = document.getElementById("transactionList");
+      const homeList = document.getElementById("homeTransactionList");
 
       if (transactions.length === 0) {
         list.innerHTML = '<div class="empty-state">Belum ada transaksi</div>';
-        return;
+        homeList.innerHTML = '<div class="empty-state">Belum ada transaksi</div>';
+      } else {
+        list.innerHTML = transactions.map(transactionItemHTML).join("");
+        homeList.innerHTML = transactions.slice(0, 3).map(transactionItemHTML).join("");
       }
-
-      list.innerHTML = transactions
-        .map((trx) => {
-          const amountClass = trx.type === "in" ? "amount-positive" : "amount-negative";
-          const sign = trx.type === "in" ? "+" : "-";
-
-          return `
-            <div class="transaction-item">
-              <div class="transaction-info">
-                <h4>${trx.title}</h4>
-                <p>${trx.time}</p>
-              </div>
-              <div class="${amountClass}">
-                ${sign} ${formatRupiah(trx.amount)}
-              </div>
-            </div>
-          `;
-        })
-        .join("");
     }
 
     function topUp() {
       const amountInput = document.getElementById("topupAmount");
       const amount = Number(amountInput.value);
-
-      if (!amount || amount <= 0) {
-        alert("Masukkan nominal top up yang valid.");
-        return;
-      }
+      if (!amount || amount <= 0) { alert("Masukkan nominal top up yang valid."); return; }
 
       balance += amount;
-
-      transactions.unshift({
-        title: "Top Up Saldo",
-        time: new Date().toLocaleString("id-ID"),
-        amount: amount,
-        type: "in"
-      });
+      transactions.unshift({ title: "Top Up Saldo", time: new Date().toLocaleString("id-ID"), amount, type: "in" });
 
       amountInput.value = "";
-      updateBalanceDisplay();
-      renderTransactions();
-      saveState();
+      updateBalanceDisplay(); renderTransactions(); saveState();
+      alert("Top up berhasil!");
     }
 
-    /* Transfer: validasi dulu, lalu minta PIN */
     function startTransfer() {
       const targetName = document.getElementById("targetName").value.trim();
       const amount = Number(document.getElementById("transferAmount").value);
@@ -767,31 +627,13 @@
 
       requestPin(function () {
         balance -= amount;
-
-        transactions.unshift({
-          title: "Transfer ke " + targetName,
-          time: new Date().toLocaleString("id-ID"),
-          amount: amount,
-          type: "out"
-        });
+        transactions.unshift({ title: "Transfer ke " + targetName, time: new Date().toLocaleString("id-ID"), amount, type: "out" });
 
         document.getElementById("targetName").value = "";
         document.getElementById("transferAmount").value = "";
-        updateBalanceDisplay();
-        renderTransactions();
-        saveState();
+        updateBalanceDisplay(); renderTransactions(); saveState();
         alert("Transfer ke " + targetName + " berhasil!");
       });
-    }
-
-    /* ========== QRIS DUMMY ========== */
-    function openQris() {
-      document.getElementById("qrisModal").classList.remove("hidden");
-      drawFakeQR();
-    }
-
-    function closeQris() {
-      document.getElementById("qrisModal").classList.add("hidden");
     }
 
     function payQris() {
@@ -803,24 +645,20 @@
 
       requestPin(function () {
         balance -= amount;
-
-        transactions.unshift({
-          title: "QRIS: " + merchant,
-          time: new Date().toLocaleString("id-ID"),
-          amount: amount,
-          type: "out"
-        });
+        transactions.unshift({ title: "QRIS: " + merchant, time: new Date().toLocaleString("id-ID"), amount, type: "out" });
 
         document.getElementById("qrisAmount").value = "";
-        closeQris();
-        updateBalanceDisplay();
-        renderTransactions();
-        saveState();
+        updateBalanceDisplay(); renderTransactions(); saveState();
         alert("Pembayaran QRIS ke " + merchant + " berhasil!");
       });
     }
 
-    /* Gambar QR palsu (hanya tampilan) */
+    /* ========== PROFIL ========== */
+    function renderProfile() {
+      document.getElementById("profilePhone").textContent = localStorage.getItem("xyz_phone") || "-";
+    }
+
+    /* ========== QR DEMO ========== */
     function drawFakeQR() {
       const canvas = document.getElementById("qrCanvas");
       const ctx = canvas.getContext("2d");
@@ -832,35 +670,22 @@
       ctx.fillStyle = "#111111";
 
       let seed = 42;
-      function rand() {
-        seed = (seed * 9301 + 49297) % 233280;
-        return seed / 233280;
-      }
-
-      function inFinder(r, c) {
-        return (r < 7 && c < 7) || (r < 7 && c >= n - 7) || (r >= n - 7 && c < 7);
-      }
-
+      function rand() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+      function inFinder(r, c) { return (r < 7 && c < 7) || (r < 7 && c >= n - 7) || (r >= n - 7 && c < 7); }
       function drawFinder(c0, r0) {
-        for (let r = 0; r < 7; r++) {
-          for (let c = 0; c < 7; c++) {
-            const edge = (r === 0 || r === 6 || c === 0 || c === 6);
-            const core = (r >= 2 && r <= 4 && c >= 2 && c <= 4);
-            if (edge || core) ctx.fillRect((c0 + c) * size, (r0 + r) * size, size, size);
-          }
+        for (let r = 0; r < 7; r++) for (let c = 0; c < 7; c++) {
+          const edge = (r === 0 || r === 6 || c === 0 || c === 6);
+          const core = (r >= 2 && r <= 4 && c >= 2 && c <= 4);
+          if (edge || core) ctx.fillRect((c0 + c) * size, (r0 + r) * size, size, size);
         }
       }
 
-      for (let r = 0; r < n; r++) {
-        for (let c = 0; c < n; c++) {
-          if (inFinder(r, c)) continue;
-          if (rand() > 0.5) ctx.fillRect(c * size, r * size, size, size);
-        }
+      for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) {
+        if (inFinder(r, c)) continue;
+        if (rand() > 0.5) ctx.fillRect(c * size, r * size, size, size);
       }
 
-      drawFinder(0, 0);
-      drawFinder(n - 7, 0);
-      drawFinder(0, n - 7);
+      drawFinder(0, 0); drawFinder(n - 7, 0); drawFinder(0, n - 7);
     }
 
     /* ========== INIT ========== */
