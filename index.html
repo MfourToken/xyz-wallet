@@ -76,16 +76,18 @@
       border: 1px solid rgba(34,211,238,0.25);
       border-radius: 20px; padding: 24px; width: 100%; max-width: 340px; text-align: center;
       box-shadow: 0 0 40px rgba(14,165,233,0.3);
+      max-height: 90vh; overflow-y: auto;
     }
 
-    .modal-card h3 { margin-bottom: 14px; color: #e2e8f0; }
+    .modal-card h3 { margin-bottom: 14px; color: #e2e8f0; letter-spacing: 1px; }
 
     .modal-card input {
       width: 100%; padding: 12px;
       border: 1px solid #164e63; background: #081420; color: #e2e8f0;
       border-radius: 12px; margin-bottom: 12px; font-size: 14px;
-      text-align: center; letter-spacing: 2px;
     }
+
+    .modal-card .pin-input { text-align: center; letter-spacing: 2px; }
 
     .modal-card button {
       width: 100%; border: none; border-radius: 12px; padding: 12px;
@@ -94,6 +96,12 @@
     }
 
     .btn-secondary { background: #1e293b !important; color: #94a3b8 !important; margin-top: 8px; box-shadow: none !important; }
+
+    select {
+      width: 100%; padding: 12px;
+      border: 1px solid #164e63; background: #081420; color: #e2e8f0;
+      border-radius: 12px; margin-bottom: 12px; font-size: 14px;
+    }
 
     /* ========== APLIKASI UTAMA ========== */
     .app {
@@ -124,7 +132,6 @@
       border: 1px solid rgba(165,243,252,0.25);
       border-radius: 18px; padding: 18px;
       display: flex; justify-content: space-between; align-items: center; gap: 12px;
-      backdrop-filter: blur(4px);
     }
 
     .balance-left { flex: 1; text-align: left; }
@@ -164,12 +171,24 @@
 
     .section-title { font-size: 15px; font-weight: bold; margin-bottom: 12px; color: #e2e8f0; letter-spacing: 1px; }
 
+    /* MENU PEMBAYARAN (LISTRIK / PDAM / PULSA) */
+    .ppob-grid { display: flex; gap: 10px; margin-bottom: 18px; }
+
+    .ppob-item {
+      flex: 1; background: #0d1f33; border: 1px solid rgba(34,211,238,0.15);
+      border-radius: 14px; padding: 12px 6px; color: #a5f3fc;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      cursor: pointer; font-size: 11px; font-weight: bold;
+    }
+    .ppob-item:hover { border-color: #22d3ee; box-shadow: 0 0 12px rgba(34,211,238,0.3); }
+    .ppob-item svg { width: 20px; height: 20px; }
+
     .card {
       background: #0d1f33; border: 1px solid rgba(34,211,238,0.15);
       border-radius: 16px; padding: 16px; margin-bottom: 16px;
     }
 
-    label { display: block; font-size: 13px; color: #7dd3fc; margin-bottom: 6px; }
+    label { display: block; font-size: 13px; color: #7dd3fc; margin-bottom: 6px; text-align: left; }
 
     input {
       width: 100%; padding: 12px;
@@ -323,6 +342,31 @@
       </div>
 
       <div class="content">
+        <!-- MENU PEMBAYARAN BARU -->
+        <div class="section-title">Pembayaran & Tagihan</div>
+        <div class="ppob-grid">
+          <button class="ppob-item" onclick="openListrik()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linejoin="round">
+              <path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/>
+            </svg>
+            Listrik
+          </button>
+
+          <button class="ppob-item" onclick="openPdam()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2">
+              <path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/>
+            </svg>
+            PDAM
+          </button>
+
+          <button class="ppob-item" onclick="openPulsa()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round">
+              <rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>
+            </svg>
+            Pulsa
+          </button>
+        </div>
+
         <div class="home-section-head">
           <div class="section-title">Transaksi Terakhir</div>
           <button class="link-btn" onclick="switchTab('aktivitas')">Lihat Semua</button>
@@ -449,7 +493,7 @@
   <div class="modal-overlay hidden" id="pinModal">
     <div class="modal-card">
       <h3>Masukkan PIN Transaksi</h3>
-      <input type="password" id="pinModalInput" maxlength="6" inputmode="numeric" placeholder="******" />
+      <input type="password" id="pinModalInput" class="pin-input" maxlength="6" inputmode="numeric" placeholder="******" />
       <button onclick="confirmPin()">Konfirmasi</button>
       <button class="btn-secondary" onclick="closePinModal()">Batal</button>
     </div>
@@ -459,11 +503,71 @@
   <div class="modal-overlay hidden" id="pinChangeModal">
     <div class="modal-card">
       <h3>Ganti PIN</h3>
-      <input type="password" id="oldPinInput" maxlength="6" placeholder="PIN lama" />
-      <input type="password" id="newPinChangeInput" maxlength="6" placeholder="PIN baru 6 digit" />
-      <input type="password" id="confirmPinChangeInput" maxlength="6" placeholder="Ulangi PIN baru" />
+      <input type="password" id="oldPinInput" class="pin-input" maxlength="6" placeholder="PIN lama" />
+      <input type="password" id="newPinChangeInput" class="pin-input" maxlength="6" placeholder="PIN baru 6 digit" />
+      <input type="password" id="confirmPinChangeInput" class="pin-input" maxlength="6" placeholder="Ulangi PIN baru" />
       <button onclick="changePin()">Simpan</button>
       <button class="btn-secondary" onclick="closePinChange()">Batal</button>
+    </div>
+  </div>
+
+  <!-- ========== POPUP LISTRIK ========== -->
+  <div class="modal-overlay hidden" id="listrikModal">
+    <div class="modal-card">
+      <h3>⚡ Token Listrik</h3>
+
+      <label for="listrikId">ID Pelanggan / Nomor Meter</label>
+      <input type="text" id="listrikId" inputmode="numeric" maxlength="12" placeholder="Contoh: 123456789012" />
+
+      <label for="listrikNominal">Nominal Token</label>
+      <select id="listrikNominal">
+        <option value="20000">Rp 20.000</option>
+        <option value="50000">Rp 50.000</option>
+        <option value="100000">Rp 100.000</option>
+        <option value="200000">Rp 200.000</option>
+        <option value="500000">Rp 500.000</option>
+      </select>
+
+      <button onclick="payListrik()">Beli Token</button>
+      <button class="btn-secondary" onclick="closeModal('listrikModal')">Batal</button>
+    </div>
+  </div>
+
+  <!-- ========== POPUP PDAM ========== -->
+  <div class="modal-overlay hidden" id="pdamModal">
+    <div class="modal-card">
+      <h3>💧 Tagihan PDAM</h3>
+
+      <label for="pdamId">Nomor Pelanggan PDAM</label>
+      <input type="text" id="pdamId" inputmode="numeric" maxlength="10" placeholder="Contoh: 08123456" />
+
+      <div class="otp-demo-note hidden" id="pdamBillInfo"></div>
+
+      <button onclick="cekTagihanPdam()">Cek Tagihan</button>
+      <button onclick="payPdam()">Bayar Tagihan</button>
+      <button class="btn-secondary" onclick="closeModal('pdamModal')">Batal</button>
+    </div>
+  </div>
+
+  <!-- ========== POPUP PULSA ========== -->
+  <div class="modal-overlay hidden" id="pulsaModal">
+    <div class="modal-card">
+      <h3>📱 Beli Pulsa</h3>
+
+      <label for="pulsaPhone">Nomor HP</label>
+      <input type="tel" id="pulsaPhone" inputmode="numeric" maxlength="13" placeholder="Contoh: 08123456789" />
+
+      <label for="pulsaNominal">Nominal Pulsa</label>
+      <select id="pulsaNominal">
+        <option value="5000">Rp 5.000</option>
+        <option value="10000">Rp 10.000</option>
+        <option value="25000">Rp 25.000</option>
+        <option value="50000">Rp 50.000</option>
+        <option value="100000">Rp 100.000</option>
+      </select>
+
+      <button onclick="buyPulsa()">Beli Pulsa</button>
+      <button class="btn-secondary" onclick="closeModal('pulsaModal')">Batal</button>
     </div>
   </div>
 
@@ -472,6 +576,7 @@
     let transactions = [];
     let generatedOtp = null;
     let pendingAction = null;
+    let pdamBill = 0;
 
     /* ========== DATA LOKAL ========== */
     function saveState() {
@@ -502,6 +607,8 @@
       if (tab === "qris") drawFakeQR();
       if (tab === "profil") renderProfile();
     }
+
+    function closeModal(id) { document.getElementById(id).classList.add("hidden"); }
 
     /* ========== LOGIN ========== */
     function sendOtp() {
@@ -703,6 +810,93 @@
         document.getElementById("qrisAmount").value = "";
         updateBalanceDisplay(); renderTransactions(); saveState();
         alert("Pembayaran QRIS ke " + merchant + " berhasil!");
+      });
+    }
+
+    /* ========== LISTRIK / PDAM / PULSA ========== */
+    function openListrik() {
+      document.getElementById("listrikId").value = "";
+      document.getElementById("listrikModal").classList.remove("hidden");
+    }
+
+    function openPdam() {
+      document.getElementById("pdamId").value = "";
+      document.getElementById("pdamBillInfo").classList.add("hidden");
+      pdamBill = 0;
+      document.getElementById("pdamModal").classList.remove("hidden");
+    }
+
+    function openPulsa() {
+      document.getElementById("pulsaPhone").value = "";
+      document.getElementById("pulsaModal").classList.remove("hidden");
+    }
+
+    function generateToken() {
+      const parts = [];
+      for (let i = 0; i < 4; i++) parts.push(String(Math.floor(1000 + Math.random() * 9000)));
+      return parts.join("-");
+    }
+
+    function payListrik() {
+      const id = document.getElementById("listrikId").value.trim();
+      const amount = Number(document.getElementById("listrikNominal").value);
+
+      if (!/^[0-9]{8,12}$/.test(id)) { alert("Masukkan ID pelanggan yang valid (8-12 digit)."); return; }
+      if (amount > balance) { alert("Saldo tidak cukup."); return; }
+
+      requestPin(function () {
+        balance -= amount;
+        transactions.unshift({ title: "Token Listrik: " + id, time: new Date().toLocaleString("id-ID"), amount, type: "out" });
+
+        closeModal("listrikModal");
+        updateBalanceDisplay(); renderTransactions(); saveState();
+        alert("Pembelian token listrik berhasil!\nKode token: " + generateToken());
+      });
+    }
+
+    function cekTagihanPdam() {
+      const id = document.getElementById("pdamId").value.trim();
+      if (!/^[0-9]{6,10}$/.test(id)) { alert("Masukkan nomor pelanggan PDAM yang valid (6-10 digit)."); return; }
+
+      const lastTwo = Number(id.slice(-2));
+      pdamBill = 45000 + lastTwo * 1000;
+
+      const info = document.getElementById("pdamBillInfo");
+      info.textContent = "Tagihan PDAM " + id + " : " + formatRupiah(pdamBill);
+      info.classList.remove("hidden");
+    }
+
+    function payPdam() {
+      const id = document.getElementById("pdamId").value.trim();
+      if (!id || !pdamBill) { alert("Cek tagihan terlebih dahulu."); return; }
+      if (pdamBill > balance) { alert("Saldo tidak cukup."); return; }
+
+      const amount = pdamBill;
+      requestPin(function () {
+        balance -= amount;
+        transactions.unshift({ title: "PDAM: " + id, time: new Date().toLocaleString("id-ID"), amount, type: "out" });
+
+        pdamBill = 0;
+        closeModal("pdamModal");
+        updateBalanceDisplay(); renderTransactions(); saveState();
+        alert("Pembayaran PDAM berhasil!");
+      });
+    }
+
+    function buyPulsa() {
+      const phone = document.getElementById("pulsaPhone").value.trim();
+      const amount = Number(document.getElementById("pulsaNominal").value);
+
+      if (!/^0[0-9]{9,12}$/.test(phone)) { alert("Masukkan nomor HP yang valid."); return; }
+      if (amount > balance) { alert("Saldo tidak cukup."); return; }
+
+      requestPin(function () {
+        balance -= amount;
+        transactions.unshift({ title: "Pulsa: " + phone, time: new Date().toLocaleString("id-ID"), amount, type: "out" });
+
+        closeModal("pulsaModal");
+        updateBalanceDisplay(); renderTransactions(); saveState();
+        alert("Pembelian pulsa " + formatRupiah(amount) + " ke " + phone + " berhasil!");
       });
     }
 
