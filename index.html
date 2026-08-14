@@ -700,7 +700,7 @@
       const phone = document.getElementById("phoneInput").value.trim();
       if (!/^0[0-9]{9,12}$/.test(phone)) { alert("Masukkan nomor HP yang valid (diawali 0, 10-13 digit)."); return; }
       generatedOtp = String(Math.floor(100000 + Math.random() * 900000));
-      document.getElementById("otpDemoNote").textContent = "OTP demo Anda: " + generatedOtp;
+      document.getElementById("otpDemoNote").textContent = "OTP virtual Anda: " + generatedOtp;
       document.getElementById("otpSection").classList.remove("hidden");
     }
 
