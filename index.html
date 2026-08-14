@@ -192,26 +192,37 @@
       color: var(--accent-light);
     }
 
+    /* KARTU SALDO: SALDO DI ATAS KANAN + 3 TOMBOL DI BAWAH */
     .balance-card {
       margin-top: 18px; background: rgba(255,255,255,0.10);
       border: 1px solid var(--border-light);
       border-radius: 18px; padding: 18px;
-      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+      display: flex; flex-direction: column; gap: 14px;
     }
 
-    .balance-left { flex: 1; text-align: left; }
-    .balance-label { font-size: 12px; opacity: 0.85; margin-bottom: 6px; letter-spacing: 2px; text-transform: uppercase; }
+    .balance-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+
+    .balance-label { font-size: 12px; opacity: 0.85; letter-spacing: 2px; text-transform: uppercase; }
+
+    .balance-right { display: flex; align-items: center; gap: 8px; }
 
     .balance-value {
-      font-size: 30px; font-weight: bold;
+      font-size: 26px; font-weight: bold;
       font-family: Consolas, Menlo, monospace;
       text-shadow: 0 0 16px var(--glow-strong);
     }
 
+    .eye-btn {
+      width: auto; background: rgba(255,255,255,0.15); border: none;
+      border-radius: 8px; padding: 5px; color: white; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .eye-btn:hover { background: rgba(255,255,255,0.3); }
+
     .balance-actions { display: flex; gap: 10px; }
 
     .action-btn {
-      width: 80px; background: rgba(255,255,255,0.12); border: 1px solid var(--border-light);
+      flex: 1; width: auto; background: rgba(255,255,255,0.12); border: 1px solid var(--border-light);
       border-radius: 14px; padding: 10px 6px; color: white;
       display: flex; flex-direction: column; align-items: center; gap: 5px;
       cursor: pointer; font-size: 11px; font-weight: bold;
@@ -397,11 +408,26 @@
         <div class="datetime" id="datetimeDisplay">Memuat waktu...</div>
 
         <div class="balance-card">
-          <div class="balance-left">
+          <!-- BARIS ATAS: LABEL KIRI, SALDO + ICON MATA KANAN -->
+          <div class="balance-top">
             <div class="balance-label">Saldo Anda</div>
-            <div class="balance-value" id="balanceDisplay">Rp 0</div>
+            <div class="balance-right">
+              <div class="balance-value" id="balanceDisplay">Rp 0</div>
+              <button class="eye-btn" onclick="toggleHideBalance()" title="Sembunyikan / tampilkan saldo">
+                <svg id="eyeOpen" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>
+                </svg>
+                <svg id="eyeClosed" class="hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 3l18 18"/>
+                  <path d="M10.6 5.1A10 10 0 0 1 12 5c7 0 10 7 10 7a17.6 17.6 0 0 1-2.2 3.2"/>
+                  <path d="M6.6 6.6C3.8 8.5 2 12 2 12s3 7 10 7c1.8 0 3.4-.4 4.8-1.1"/>
+                  <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>
+                </svg>
+              </button>
+            </div>
           </div>
 
+          <!-- BARIS BAWAH: DEPOSIT / WITHDRAW / TRANSFER -->
           <div class="balance-actions">
             <button class="action-btn" onclick="goDeposit()" title="Deposit">
               <span class="icon-circle">
@@ -419,6 +445,15 @@
                 </svg>
               </span>
               Withdraw
+            </button>
+
+            <button class="action-btn" onclick="goTransfer()" title="Transfer">
+              <span class="icon-circle">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/>
+                </svg>
+              </span>
+              Transfer
             </button>
           </div>
         </div>
@@ -616,6 +651,17 @@
     </div>
   </div>
 
+  <!-- ========== POPUP TARIK TUNAI (WITHDRAW) ========== -->
+  <div class="modal-overlay hidden" id="withdrawModal">
+    <div class="modal-card">
+      <h3>💵 Tarik Tunai</h3>
+      <label>Nominal Tarik</label>
+      <input type="number" id="withdrawAmount" min="1" placeholder="Contoh: 100000" />
+      <button onclick="withdrawCash()">Tarik</button>
+      <button class="btn-secondary" onclick="closeModal('withdrawModal')">Batal</button>
+    </div>
+  </div>
+
   <!-- ========== POPUP LISTRIK ========== -->
   <div class="modal-overlay hidden" id="listrikModal">
     <div class="modal-card">
@@ -771,6 +817,7 @@
     let pendingAction = null;
     let pdamBill = 0;
     let ticketQuote = { type: null, price: 0, label: "" };
+    let balanceHidden = localStorage.getItem("xyz_hide_balance") === "1";
 
     /* ========== TEMA ========== */
     function setTheme(theme) {
@@ -895,6 +942,13 @@
     }
     function closePinModal() { document.getElementById("pinModal").classList.add("hidden"); }
 
+    /* ========== SEMBUNYIKAN SALDO ========== */
+    function toggleHideBalance() {
+      balanceHidden = !balanceHidden;
+      localStorage.setItem("xyz_hide_balance", balanceHidden ? "1" : "0");
+      updateBalanceDisplay();
+    }
+
     /* ========== JAM REAL TIME ========== */
     function updateDateTime() {
       const now = new Date();
@@ -910,10 +964,34 @@
 
     /* ========== DOMPET ========== */
     function formatRupiah(number) { return "Rp " + number.toLocaleString("id-ID"); }
-    function updateBalanceDisplay() { document.getElementById("balanceDisplay").textContent = formatRupiah(balance); }
+
+    function updateBalanceDisplay() {
+      const el = document.getElementById("balanceDisplay");
+      el.textContent = balanceHidden ? "Rp ••••••" : formatRupiah(balance);
+      document.getElementById("eyeOpen").classList.toggle("hidden", balanceHidden);
+      document.getElementById("eyeClosed").classList.toggle("hidden", !balanceHidden);
+    }
 
     function goDeposit() { switchTab("dompet"); setTimeout(() => document.getElementById("topupAmount").focus(), 100); }
-    function goWithdraw() { switchTab("dompet"); setTimeout(() => document.getElementById("targetName").focus(), 100); }
+
+    function goTransfer() { switchTab("dompet"); setTimeout(() => document.getElementById("targetName").focus(), 100); }
+
+    function goWithdraw() {
+      document.getElementById("withdrawAmount").value = "";
+      document.getElementById("withdrawModal").classList.remove("hidden");
+    }
+
+    function withdrawCash() {
+      const amount = Number(document.getElementById("withdrawAmount").value);
+      if (!amount || amount <= 0) { alert("Masukkan nominal tarik tunai yang valid."); return; }
+      if (amount > balance) { alert("Saldo tidak cukup."); return; }
+      requestPin(function () {
+        balance -= amount;
+        addTransaction("Tarik Tunai", amount);
+        closeModal("withdrawModal");
+        alert("Tarik tunai " + formatRupiah(amount) + " berhasil!");
+      });
+    }
 
     function transactionItemHTML(trx) {
       const amountClass = trx.type === "in" ? "amount-positive" : "amount-negative";
