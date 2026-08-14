@@ -209,7 +209,7 @@
       display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 50;
     }
 
-    /* PERBAIKAN: popup PIN selalu di atas popup lain */
+    /* Popup PIN selalu di atas popup lain */
     #pinModal { z-index: 150; }
 
     .modal-card {
@@ -342,7 +342,9 @@
 
     .vcard-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
     .vcard-brand { font-weight: bold; letter-spacing: 2px; }
-    .vcard-chip { width: 40px; height: 28px; border-radius: 6px; background: linear-gradient(135deg, #fde68a, #f59e0b); }
+
+    /* Chip kartu realistis (SVG EMV) */
+    .vcard-chip { width: 46px; height: 34px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.45)); }
 
     .vcard-number {
       display: flex; align-items: center; gap: 10px;
@@ -606,7 +608,31 @@
         <div class="vcard">
           <div class="vcard-top">
             <div class="vcard-brand">XYZ CARD</div>
-            <div class="vcard-chip"></div>
+
+            <!-- CHIP EMV REALISTIS -->
+            <svg class="vcard-chip" width="46" height="34" viewBox="0 0 46 34" role="img" aria-label="Chip kartu">
+              <defs>
+                <linearGradient id="chipGold" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%"  stop-color="#f9e7a5"/>
+                  <stop offset="45%" stop-color="#e2b64d"/>
+                  <stop offset="100%" stop-color="#9c6f1a"/>
+                </linearGradient>
+              </defs>
+              <rect x="0.6" y="0.6" width="44.8" height="32.8" rx="6"
+                fill="url(#chipGold)" stroke="#7a5a14" stroke-width="1.2"/>
+              <g stroke="#7a5a14" stroke-width="1.1" fill="none" opacity="0.85">
+                <path d="M0.6 11.5 H13"/>
+                <path d="M0.6 22.5 H13"/>
+                <path d="M33 11.5 H45.4"/>
+                <path d="M33 22.5 H45.4"/>
+                <path d="M13 0.6 V33.4"/>
+                <path d="M33 0.6 V33.4"/>
+                <path d="M13 11.5 H33"/>
+                <path d="M13 22.5 H33"/>
+              </g>
+              <rect x="17" y="14.5" width="12" height="7" rx="2"
+                fill="none" stroke="#7a5a14" stroke-width="1.1" opacity="0.85"/>
+            </svg>
           </div>
 
           <div class="vcard-number">
@@ -742,7 +768,6 @@
       <div class="page-header"><h2>Profil</h2></div>
       <div class="content">
         <div class="card profile-card">
-          <!-- PERBAIKAN: avatar tidak lagi memakai position:absolute -->
           <div class="profile-avatar">
             <img src="logo.png" alt="" class="logo-img"
               onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
