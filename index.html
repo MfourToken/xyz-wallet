@@ -209,6 +209,9 @@
       display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 50;
     }
 
+    /* PERBAIKAN: popup PIN selalu di atas popup lain */
+    #pinModal { z-index: 150; }
+
     .modal-card {
       background: var(--surface);
       border: 1px solid var(--border-mid);
@@ -739,9 +742,11 @@
       <div class="page-header"><h2>Profil</h2></div>
       <div class="content">
         <div class="card profile-card">
+          <!-- PERBAIKAN: avatar tidak lagi memakai position:absolute -->
           <div class="profile-avatar">
-            <img src="logo.png" alt="" class="logo-img" onerror="this.style.display='none'" />
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" style="position:absolute;">
+            <img src="logo.png" alt="" class="logo-img"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" style="display:none;">
               <circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>
             </svg>
           </div>
@@ -834,7 +839,7 @@
   <div class="modal-overlay hidden" id="receiptModal">
     <div class="modal-card">
       <div class="login-logo" style="width:56px;height:56px;font-size:14px;margin:0 auto 10px;">
-        <img src="logo.png" alt="XYZ Wallet" class="logo-img"
+        <img src="logo.png" alt="XYZ" class="logo-img"
           onerror="var p=this.parentElement; this.remove(); p.textContent='XYZ';" />
       </div>
       <h3>Struk Transaksi</h3>
@@ -1016,7 +1021,7 @@
     let cardVisible = false;
     let currentReceipt = null;
 
-    /* ========== TOAST ========== */
+    /* ========== TOAST (pengganti alert) ========== */
     function showToast(msg) {
       const container = document.getElementById("toastContainer");
       const t = document.createElement("div");
@@ -1137,7 +1142,7 @@
     function copyReceipt() {
       if (!currentReceipt) return;
       const text =
-        "STRUK XYZ WALLET\n" +
+        "STRUK XYZ\n" +
         "--------------------------\n" +
         "Status  : SUKSES\n" +
         "Layanan : " + currentReceipt.title + "\n" +
@@ -1147,7 +1152,7 @@
         "Waktu   : " + currentReceipt.time + "\n" +
         "ID      : " + currentReceipt.id + "\n" +
         "--------------------------\n" +
-        "Terima kasih telah menggunakan XYZ Wallet.";
+        "Terima kasih telah menggunakan XYZ.";
       if (navigator.clipboard) {
         navigator.clipboard.writeText(text).then(function () { alert("Struk disalin!"); });
       } else {
