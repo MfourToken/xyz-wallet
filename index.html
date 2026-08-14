@@ -119,7 +119,7 @@
       100% { transform: translateX(350%); }
     }
 
-    /* ========== TOAST NOTIFICATION ========== */
+    /* ========== TOAST ========== */
     #toastContainer {
       position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
       display: flex; flex-direction: column; gap: 8px; z-index: 300;
@@ -227,6 +227,23 @@
 
     input[type="date"] { color-scheme: dark; }
 
+    /* ========== STRUK ========== */
+    .receipt-status { color: #34d399; font-weight: bold; letter-spacing: 3px; font-size: 13px; margin-bottom: 12px; }
+
+    .receipt-body {
+      border-top: 1px dashed var(--border-mid);
+      border-bottom: 1px dashed var(--border-mid);
+      padding: 12px 0; margin-bottom: 12px;
+    }
+
+    .receipt-row {
+      display: flex; justify-content: space-between; gap: 10px;
+      font-size: 12px; color: var(--text-dim); margin-bottom: 8px; text-align: left;
+    }
+    .receipt-row b { color: var(--text-main); text-align: right; }
+
+    #rBarcode { display: block; background: white; border-radius: 8px; margin: 0 auto 8px; }
+
     /* ========== APLIKASI UTAMA ========== */
     .app {
       width: 100%; max-width: 420px;
@@ -297,7 +314,7 @@
     .icon-circle svg { stroke: var(--icon-stroke); }
     .ppob-item svg { stroke: var(--accent-soft); }
 
-    /* ========== KARTU VIRTUAL XYZ ========== */
+    /* ========== KARTU VIRTUAL ========== */
     .vcard {
       background: linear-gradient(135deg, var(--grad1), var(--grad2) 60%, var(--grad3));
       border-radius: 18px; padding: 18px; color: white;
@@ -387,8 +404,9 @@
       display: flex; justify-content: space-between; align-items: center;
       padding: 12px; border-radius: 12px;
       background: var(--surface3); border: 1px solid var(--border-soft);
-      margin-bottom: 10px;
+      margin-bottom: 10px; cursor: pointer;
     }
+    .transaction-item:hover { border-color: var(--accent-soft); }
 
     .transaction-info h4 { font-size: 14px; margin-bottom: 4px; color: var(--text-main); }
     .transaction-info p { font-size: 12px; color: var(--text-dim); }
@@ -446,7 +464,7 @@
 </head>
 <body>
 
-  <!-- ========== SPLASH SCREEN ========== -->
+  <!-- ========== SPLASH ========== -->
   <div class="splash" id="splashScreen">
     <div class="splash-logo">XYZ</div>
     <div class="splash-name">XYZ Wallet</div>
@@ -553,7 +571,6 @@
       </div>
 
       <div class="content">
-        <!-- KARTU VIRTUAL -->
         <div class="vcard">
           <div class="vcard-top">
             <div class="vcard-brand">XYZ CARD</div>
@@ -569,7 +586,7 @@
           <div class="vcard-bottom">
             <div>
               <div class="vcard-label">Pemegang</div>
-              <div class="vcard-value">Fery Muliawan</div>
+              <div class="vcard-value">Fery muliawan</div>
             </div>
             <div>
               <div class="vcard-label">Berlaku</div>
@@ -783,6 +800,30 @@
     </div>
   </div>
 
+  <!-- ========== POPUP STRUK ========== -->
+  <div class="modal-overlay hidden" id="receiptModal">
+    <div class="modal-card">
+      <div class="login-logo" style="width:46px;height:46px;font-size:14px;margin:0 auto 10px;">XYZ</div>
+      <h3>Struk Transaksi</h3>
+      <p class="receipt-status">✔ SUKSES</p>
+
+      <div class="receipt-body">
+        <div class="receipt-row"><span>Layanan</span><b id="rTitle">-</b></div>
+        <div class="receipt-row"><span>Nominal</span><b id="rAmount">-</b></div>
+        <div class="receipt-row"><span>Biaya Admin</span><b>Rp 0</b></div>
+        <div class="receipt-row"><span>Sumber Dana</span><b>Saldo XYZ</b></div>
+        <div class="receipt-row"><span>Waktu</span><b id="rTime">-</b></div>
+        <div class="receipt-row"><span>ID Transaksi</span><b id="rId">-</b></div>
+      </div>
+
+      <canvas id="rBarcode" width="220" height="56"></canvas>
+      <p class="qr-note">Simpan struk ini sebagai bukti transaksi (simulasi)</p>
+
+      <button onclick="copyReceipt()">Salin Struk</button>
+      <button class="btn-secondary" onclick="closeModal('receiptModal')">Tutup</button>
+    </div>
+  </div>
+
   <!-- ========== POPUP LISTRIK ========== -->
   <div class="modal-overlay hidden" id="listrikModal">
     <div class="modal-card">
@@ -940,8 +981,9 @@
     let ticketQuote = { type: null, price: 0, label: "" };
     let balanceHidden = localStorage.getItem("xyz_hide_balance") === "1";
     let cardVisible = false;
+    let currentReceipt = null;
 
-    /* ========== TOAST (pengganti alert) ========== */
+    /* ========== TOAST ========== */
     function showToast(msg) {
       const container = document.getElementById("toastContainer");
       const t = document.createElement("div");
@@ -984,6 +1026,18 @@
       catch (e) { transactions = []; }
     }
 
+    /* ========== ID TRANSAKSI ========== */
+    function generateId() {
+      return "XYZ-" + String(Date.now()).slice(-8) + String(Math.floor(100 + Math.random() * 900));
+    }
+
+    function fallbackId(trx, i) {
+      let h = 0;
+      const s = trx.title + "|" + trx.time + "|" + i;
+      for (let c = 0; c < s.length; c++) h = (h * 31 + s.charCodeAt(c)) % 100000000;
+      return "XYZ-" + String(h).padStart(8, "0");
+    }
+
     /* ========== KARTU VIRTUAL ========== */
     function getCard() {
       let card = localStorage.getItem("xyz_card");
@@ -1009,6 +1063,62 @@
         navigator.clipboard.writeText(card).then(function () { alert("Nomor kartu disalin!"); });
       } else {
         alert("Nomor kartu: " + card);
+      }
+    }
+
+    /* ========== STRUK ========== */
+    function openReceipt(i) {
+      const trx = transactions[i];
+      if (!trx) return;
+      const id = trx.id || fallbackId(trx, i);
+
+      document.getElementById("rTitle").textContent = trx.title;
+      document.getElementById("rAmount").textContent = formatRupiah(trx.amount);
+      document.getElementById("rTime").textContent = trx.time;
+      document.getElementById("rId").textContent = id;
+
+      currentReceipt = { title: trx.title, amount: formatRupiah(trx.amount), time: trx.time, id: id };
+      drawBarcode(id);
+      document.getElementById("receiptModal").classList.remove("hidden");
+    }
+
+    function drawBarcode(id) {
+      const canvas = document.getElementById("rBarcode");
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#111111";
+
+      let seed = 7;
+      for (let i = 0; i < id.length; i++) seed = (seed * 31 + id.charCodeAt(i)) % 100000;
+      function rand() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+
+      let x = 6;
+      while (x < canvas.width - 6) {
+        const w = 1 + Math.floor(rand() * 3);
+        if (rand() > 0.35) ctx.fillRect(x, 6, w, canvas.height - 12);
+        x += w + 2;
+      }
+    }
+
+    function copyReceipt() {
+      if (!currentReceipt) return;
+      const text =
+        "STRUK XYZ WALLET\n" +
+        "--------------------------\n" +
+        "Status  : SUKSES\n" +
+        "Layanan : " + currentReceipt.title + "\n" +
+        "Nominal : " + currentReceipt.amount + "\n" +
+        "Admin   : Rp 0\n" +
+        "Sumber  : Saldo XYZ\n" +
+        "Waktu   : " + currentReceipt.time + "\n" +
+        "ID      : " + currentReceipt.id + "\n" +
+        "--------------------------\n" +
+        "Terima kasih telah menggunakan XYZ Wallet.";
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(function () { alert("Struk disalin!"); });
+      } else {
+        alert(text);
       }
     }
 
@@ -1164,11 +1274,11 @@
       });
     }
 
-    function transactionItemHTML(trx) {
+    function transactionItemHTML(trx, i) {
       const amountClass = trx.type === "in" ? "amount-positive" : "amount-negative";
       const sign = trx.type === "in" ? "+" : "-";
       return `
-        <div class="transaction-item">
+        <div class="transaction-item" onclick="openReceipt(${i})" title="Lihat struk">
           <div class="transaction-info">
             <h4>${trx.title}</h4>
             <p>${trx.time}</p>
@@ -1184,13 +1294,13 @@
         list.innerHTML = '<div class="empty-state">Belum ada transaksi</div>';
         homeList.innerHTML = '<div class="empty-state">Belum ada transaksi</div>';
       } else {
-        list.innerHTML = transactions.map(transactionItemHTML).join("");
-        homeList.innerHTML = transactions.slice(0, 3).map(transactionItemHTML).join("");
+        list.innerHTML = transactions.map((t, i) => transactionItemHTML(t, i)).join("");
+        homeList.innerHTML = transactions.slice(0, 3).map((t, i) => transactionItemHTML(t, i)).join("");
       }
     }
 
     function addTransaction(title, amount) {
-      transactions.unshift({ title, time: new Date().toLocaleString("id-ID"), amount, type: "out" });
+      transactions.unshift({ id: generateId(), title, time: new Date().toLocaleString("id-ID"), amount, type: "out" });
       updateBalanceDisplay(); renderTransactions(); saveState();
     }
 
@@ -1199,7 +1309,7 @@
       const amount = Number(amountInput.value);
       if (!amount || amount <= 0) { alert("Masukkan nominal top up yang valid."); return; }
       balance += amount;
-      transactions.unshift({ title: "Top Up Saldo", time: new Date().toLocaleString("id-ID"), amount, type: "in" });
+      transactions.unshift({ id: generateId(), title: "Top Up Saldo", time: new Date().toLocaleString("id-ID"), amount, type: "in" });
       amountInput.value = "";
       updateBalanceDisplay(); renderTransactions(); saveState();
       alert("Top up berhasil!");
