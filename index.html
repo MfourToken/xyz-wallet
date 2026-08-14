@@ -53,6 +53,21 @@
       --note-bg:rgba(239,68,68,0.10);
     }
 
+    /* ========== TEMA: EMAS ========== */
+    body[data-theme="emas"] {
+      --bg1:#0d0a03; --bg2:#1f1603;
+      --surface:#171104; --surface2:#221a08; --surface3:#2d230c;
+      --field-bg:#120d03; --field-border:#7a5c14;
+      --text-main:#fef9e7; --text-dim:#c2ab7a; --label:#e5c56b;
+      --accent:#f59e0b; --accent-soft:#fbbf24; --accent-light:#fde68a;
+      --grad1:#3a2a08; --grad2:#ca8a04; --grad3:#fbbf24;
+      --glow:rgba(245,158,11,0.45); --glow-strong:rgba(251,191,36,0.6); --glow-soft:rgba(202,138,4,0.25);
+      --border-soft:rgba(251,191,36,0.2); --border-mid:rgba(251,191,36,0.35); --border-light:rgba(253,230,138,0.35);
+      --nav-idle:#9c8a5f; --icon-stroke:#a16207; --icon-circle-bg:#fef9e7;
+      --secondary-bg:#3a2d12; --secondary-text:#d9c393;
+      --note-bg:rgba(245,158,11,0.10);
+    }
+
     body {
       background: linear-gradient(160deg, var(--bg1), var(--bg2));
       min-height: 100vh;
@@ -318,6 +333,7 @@
     .swatch-ungu { background: linear-gradient(135deg, #7c3aed, #a855f7); }
     .swatch-biru { background: linear-gradient(135deg, #1d5bbf, #4da3ff); }
     .swatch-merah { background: linear-gradient(135deg, #b91c1c, #ef4444); }
+    .swatch-emas { background: linear-gradient(135deg, #a16207, #fbbf24); }
 
     /* ========== BOTTOM NAVIGATION ========== */
     .bottom-nav { display: flex; border-top: 1px solid var(--border-soft); background: var(--field-bg); }
@@ -541,6 +557,9 @@
             </button>
             <button class="theme-btn" id="theme-merah" onclick="setTheme('merah')">
               <span class="swatch swatch-merah"></span>Merah
+            </button>
+            <button class="theme-btn" id="theme-emas" onclick="setTheme('emas')">
+              <span class="swatch swatch-emas"></span>Emas
             </button>
           </div>
         </div>
