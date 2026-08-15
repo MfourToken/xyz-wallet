@@ -292,6 +292,7 @@
     .vcard-bottom { display: flex; justify-content: space-between; align-items: flex-end; gap: 10px; }
     .vcard-label { font-size: 10px; opacity: 0.7; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px; }
     .vcard-value { font-size: 13px; font-weight: bold; letter-spacing: 1px; }
+    .vcard-gpn { display: flex; align-items: flex-end; }
 
     .page-header { background: linear-gradient(135deg, var(--grad1), var(--grad2) 55%, var(--grad3)); color: white; padding: 20px; }
     .page-header h2 { font-size: 20px; letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 0 14px var(--glow-strong); }
@@ -559,6 +560,24 @@
               <div class="vcard-label">CVV</div>
               <div class="vcard-value">777</div>
             </div>
+
+            <!-- LOGO GPN (versi sederhana untuk demo) -->
+            <div class="vcard-gpn" title="Gerbang Pembayaran Nasional">
+              <svg width="46" height="40" viewBox="0 0 72 62" role="img" aria-label="GPN">
+                <g fill="#e11d48">
+                  <path d="M10 4 L34 26 L28 30 L8 12 Z"/>
+                  <path d="M14 14 L36 30 L31 34 L12 20 Z"/>
+                  <path d="M18 22 L38 34 L34 38 L16 27 Z"/>
+                  <path d="M26 28 L48 38 L40 44 L24 34 Z"/>
+                  <path d="M24 34 L16 46 L30 40 Z"/>
+                  <path d="M48 34 L60 37 L50 42 Z"/>
+                  <path d="M44 16 L50 28 L46 30 L41 21 Z"/>
+                  <path d="M50 18 L54 27 L51 29 L47 22 Z"/>
+                </g>
+                <text x="36" y="58" text-anchor="middle" font-family="Arial, sans-serif"
+                  font-size="16" font-weight="bold" fill="#ffffff">GPN</text>
+              </svg>
+            </div>
           </div>
         </div>
 
@@ -698,7 +717,7 @@
           <div class="section-title" style="margin-bottom: 10px;" data-i18n="langTitle">Bahasa</div>
           <div class="lang-switch lang-big">
             <button class="lang-btn active" data-lang="id" onclick="setLang('id')">🇮 Indonesia</button>
-            <button class="lang-btn" data-lang="en" onclick="setLang('en')">🇬🇧 English</button>
+            <button class="lang-btn" data-lang="en" onclick="setLang('en')">🇬 English</button>
           </div>
         </div>
 
@@ -1227,7 +1246,6 @@
       let usdtRate = null;
       let btcRate = null;
 
-      // 1) USDT -> IDR dari Binance
       try {
         const r = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=USDTIDR");
         if (r.ok) {
@@ -1237,7 +1255,6 @@
         }
       } catch (e) {}
 
-      // 2) Cadangan: kurs USD -> IDR
       if (!usdtRate) {
         try {
           const r = await fetch("https://open.er-api.com/v6/latest/USD");
@@ -1248,7 +1265,6 @@
         } catch (e) {}
       }
 
-      // 3) BTC -> USDT dari Binance, lalu konversi ke IDR
       try {
         const r = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT");
         if (r.ok) {
@@ -1293,7 +1309,6 @@
       document.getElementById("cryptoAmount").value = "";
       document.getElementById("cryptoEst").textContent = fmt("cryptoEst", { x: coinQty(0, c.dec), c: c.sym });
 
-      // Wallet & jaringan hanya untuk USDT dan Bitcoin
       const walletSection = document.getElementById("cryptoWalletSection");
       if (coin === "bossx") {
         walletSection.classList.add("hidden");
