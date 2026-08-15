@@ -532,7 +532,6 @@
                 </g>
                 <rect x="17" y="14.5" width="12" height="7" rx="2" fill="none" stroke="#7a5a14" stroke-width="1.1" opacity="0.85"/>
               </svg>
-              <!-- SIMBOL CONTACTLESS -->
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.9">
                 <path d="M7.5 9.5a6.5 6.5 0 0 1 0 5"/>
                 <path d="M10.8 7.8a10 10 0 0 1 0 8.4"/>
@@ -826,8 +825,22 @@
       <h3 id="cryptoTitleEl">Beli</h3>
       <p class="qr-note" id="cryptoRate" style="margin-bottom:6px;"></p>
       <p class="qr-note" id="cryptoHold" style="margin-bottom:12px;"></p>
+
       <label data-i18n="labelCryptoAmount">Nominal Pembelian (Rp)</label>
       <input type="number" id="cryptoAmount" min="1" data-i18n-ph="phCryptoAmount" placeholder="Contoh: 100000" oninput="updateCryptoEst()" />
+
+      <!-- WALLET & JARINGAN (hanya USDT & Bitcoin) -->
+      <div id="cryptoWalletSection">
+        <label data-i18n="labelNetwork">Jaringan</label>
+        <select id="cryptoNetwork">
+          <option value="BEP20">BEP20 (BSC)</option>
+          <option value="TRC20">TRC20 (Tron)</option>
+        </select>
+
+        <label data-i18n="labelWallet">Alamat Wallet</label>
+        <input type="text" id="cryptoWallet" data-i18n-ph="phWallet" placeholder="Contoh: 0xABC... / TABC..." />
+      </div>
+
       <p class="crypto-est" id="cryptoEst"></p>
       <button onclick="buyCrypto()" data-i18n="btnBuyCrypto">Beli</button>
       <button class="btn-secondary" onclick="closeModal('cryptoModal')" data-i18n="btnCancel">Batal</button>
@@ -1001,6 +1014,11 @@
         phCryptoAmount:"Contoh: 100000", cryptoHold:"Kepemilikan: {x}", cryptoRateLine:"1 {c} = {x}",
         cryptoEst:"≈ {x} {c}", btnBuyCrypto:"Beli", cryptoOk:"Pembelian {x} berhasil!",
         trxCrypto:"Beli {x}", nameBtc:"Bitcoin", nameUsdt:"USDT", nameBossx:"BossX",
+        labelNetwork:"Jaringan", labelWallet:"Alamat Wallet",
+        phWallet:"Contoh: 0xABC... / TABC...",
+        errWallet:"Masukkan alamat wallet yang valid.",
+        errWalletBep20:"Alamat BEP20 harus diawali 0x.",
+        errWalletTrc20:"Alamat TRC20 harus diawali T.",
         notifTitle:"Notifikasi", notifEmpty:"Belum ada notifikasi",
         lastTransTitle:"Transaksi Terakhir", btnSeeAll:"Lihat Semua", emptyTrans:"Belum ada transaksi",
         pageAktivitas:"Aktivitas", pageQris:"QRIS", qrNote:"QR demo untuk tampilan saja",
@@ -1076,6 +1094,11 @@
         phCryptoAmount:"e.g. 100000", cryptoHold:"Holdings: {x}", cryptoRateLine:"1 {c} = {x}",
         cryptoEst:"≈ {x} {c}", btnBuyCrypto:"Buy", cryptoOk:"{x} purchase successful!",
         trxCrypto:"Buy {x}", nameBtc:"Bitcoin", nameUsdt:"USDT", nameBossx:"BossX",
+        labelNetwork:"Network", labelWallet:"Wallet Address",
+        phWallet:"e.g. 0xABC... / TABC...",
+        errWallet:"Enter a valid wallet address.",
+        errWalletBep20:"BEP20 address must start with 0x.",
+        errWalletTrc20:"TRC20 address must start with T.",
         notifTitle:"Notifications", notifEmpty:"No notifications yet",
         lastTransTitle:"Recent Transactions", btnSeeAll:"View All", emptyTrans:"No transactions yet",
         pageAktivitas:"Activity", pageQris:"QRIS", qrNote:"Demo QR for display only",
@@ -1195,6 +1218,15 @@
       document.getElementById("cryptoHold").textContent = fmt("cryptoHold", { x: coinQty(holdings[coin] || 0, c.dec) + " " + c.sym });
       document.getElementById("cryptoAmount").value = "";
       document.getElementById("cryptoEst").textContent = fmt("cryptoEst", { x: coinQty(0, c.dec), c: c.sym });
+
+      // Wallet & jaringan hanya untuk USDT dan Bitcoin
+      const walletSection = document.getElementById("cryptoWalletSection");
+      if (coin === "bossx") {
+        walletSection.classList.add("hidden");
+      } else {
+        walletSection.classList.remove("hidden");
+        document.getElementById("cryptoWallet").value = localStorage.getItem("xyz_wallet_" + coin) || "";
+      }
       document.getElementById("cryptoModal").classList.remove("hidden");
     }
 
@@ -1209,14 +1241,27 @@
       const amount = Number(document.getElementById("cryptoAmount").value);
       if (!amount || amount <= 0) { alert(t("errAmount")); return; }
       if (amount > balance) { alert(t("errBalance")); return; }
+
+      let net = "";
+      let wallet = "";
+      if (currentCoin !== "bossx") {
+        net = document.getElementById("cryptoNetwork").value;
+        wallet = document.getElementById("cryptoWallet").value.trim();
+        if (wallet.length < 10) { alert(t("errWallet")); return; }
+        if (net === "BEP20" && wallet.indexOf("0x") !== 0) { alert(t("errWalletBep20")); return; }
+        if (net === "TRC20" && wallet.charAt(0) !== "T") { alert(t("errWalletTrc20")); return; }
+      }
+
       const qty = amount / c.rate;
       requestPin(function () {
         balance -= amount;
         const holdings = getCrypto();
         holdings[currentCoin] = (holdings[currentCoin] || 0) + qty;
         saveCrypto(holdings);
+        if (wallet) localStorage.setItem("xyz_wallet_" + currentCoin, wallet);
         const qStr = coinQty(qty, c.dec);
-        addTransaction(fmt("trxCrypto", { x: t(c.nameKey) + " " + qStr + " " + c.sym }), amount);
+        const suffix = net ? " (" + net + ")" : "";
+        addTransaction(fmt("trxCrypto", { x: t(c.nameKey) + " " + qStr + " " + c.sym + suffix }), amount);
         closeModal("cryptoModal");
         alert(fmt("cryptoOk", { x: t(c.nameKey) }));
       });
