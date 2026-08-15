@@ -1019,6 +1019,7 @@
         errWallet:"Masukkan alamat wallet yang valid.",
         errWalletBep20:"Alamat BEP20 harus diawali 0x.",
         errWalletTrc20:"Alamat TRC20 harus diawali T.",
+        rateLive:"🟢 Langsung dari Binance", rateSim:"⚪ Harga simulasi",
         notifTitle:"Notifikasi", notifEmpty:"Belum ada notifikasi",
         lastTransTitle:"Transaksi Terakhir", btnSeeAll:"Lihat Semua", emptyTrans:"Belum ada transaksi",
         pageAktivitas:"Aktivitas", pageQris:"QRIS", qrNote:"QR demo untuk tampilan saja",
@@ -1099,6 +1100,7 @@
         errWallet:"Enter a valid wallet address.",
         errWalletBep20:"BEP20 address must start with 0x.",
         errWalletTrc20:"TRC20 address must start with T.",
+        rateLive:"🟢 Live from Binance", rateSim:"⚪ Simulated price",
         notifTitle:"Notifications", notifEmpty:"No notifications yet",
         lastTransTitle:"Recent Transactions", btnSeeAll:"View All", emptyTrans:"No transactions yet",
         pageAktivitas:"Activity", pageQris:"QRIS", qrNote:"Demo QR for display only",
@@ -1194,12 +1196,13 @@
     let notifs = [];
     let notifUnread = 0;
     let currentCoin = "btc";
+    let cryptoLive = false;
 
     /* ========== CRYPTO CONFIG ========== */
     const COINS = {
       btc:   { nameKey: "nameBtc",   sym: "BTC",   rate: 1050000000, dec: 8 },
       usdt:  { nameKey: "nameUsdt",  sym: "USDT",  rate: 16500,      dec: 2 },
-      bossx: { nameKey: "nameBossx", sym: "BOSSX", rate: 2500,       dec: 2 }
+      bossx: { nameKey: "nameBossx", sym: "BOSSX", rate: 18000,      dec: 2 }
     };
 
     function getCrypto() {
@@ -1209,12 +1212,83 @@
     function saveCrypto(c) { localStorage.setItem("xyz_crypto", JSON.stringify(c)); }
     function coinQty(v, dec) { return Number(v).toFixed(dec); }
 
+    /* ========== HARGA LIVE BINANCE ========== */
+    function loadSavedRates() {
+      try {
+        const s = JSON.parse(localStorage.getItem("xyz_rates") || "null");
+        if (s) {
+          if (s.btc > 0) COINS.btc.rate = s.btc;
+          if (s.usdt > 0) COINS.usdt.rate = s.usdt;
+        }
+      } catch (e) {}
+    }
+
+    async function refreshCryptoRates() {
+      let usdtRate = null;
+      let btcRate = null;
+
+      // 1) USDT -> IDR dari Binance
+      try {
+        const r = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=USDTIDR");
+        if (r.ok) {
+          const d = await r.json();
+          const p = Number(d.price);
+          if (p > 0) usdtRate = p;
+        }
+      } catch (e) {}
+
+      // 2) Cadangan: kurs USD -> IDR
+      if (!usdtRate) {
+        try {
+          const r = await fetch("https://open.er-api.com/v6/latest/USD");
+          if (r.ok) {
+            const d = await r.json();
+            if (d && d.rates && d.rates.IDR) usdtRate = Number(d.rates.IDR);
+          }
+        } catch (e) {}
+      }
+
+      // 3) BTC -> USDT dari Binance, lalu konversi ke IDR
+      try {
+        const r = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT");
+        if (r.ok) {
+          const d = await r.json();
+          const btcUsd = Number(d.price);
+          if (btcUsd > 0) btcRate = Math.round(btcUsd * (usdtRate || COINS.usdt.rate));
+        }
+      } catch (e) {}
+
+      let live = false;
+      if (usdtRate) { COINS.usdt.rate = Math.round(usdtRate); live = true; }
+      if (btcRate) { COINS.btc.rate = btcRate; live = true; }
+      cryptoLive = live;
+
+      localStorage.setItem("xyz_rates", JSON.stringify({ btc: COINS.btc.rate, usdt: COINS.usdt.rate }));
+      updateCryptoModalTexts();
+    }
+
+    function rateLine(coin) {
+      const c = COINS[coin];
+      const src = (coin !== "bossx" && cryptoLive) ? t("rateLive") : t("rateSim");
+      return fmt("cryptoRateLine", { c: c.sym, x: formatRupiah(c.rate) }) + "  " + src;
+    }
+
+    function updateCryptoModalTexts() {
+      const modal = document.getElementById("cryptoModal");
+      if (modal.classList.contains("hidden")) return;
+      const c = COINS[currentCoin];
+      document.getElementById("cryptoRate").textContent = rateLine(currentCoin);
+      const holdings = getCrypto();
+      document.getElementById("cryptoHold").textContent = fmt("cryptoHold", { x: coinQty(holdings[currentCoin] || 0, c.dec) + " " + c.sym });
+      updateCryptoEst();
+    }
+
     function openCrypto(coin) {
       currentCoin = coin;
       const c = COINS[coin];
       const holdings = getCrypto();
       document.getElementById("cryptoTitleEl").textContent = fmt("buyCryptoTitle", { x: t(c.nameKey) });
-      document.getElementById("cryptoRate").textContent = fmt("cryptoRateLine", { c: c.sym, x: formatRupiah(c.rate) });
+      document.getElementById("cryptoRate").textContent = rateLine(coin);
       document.getElementById("cryptoHold").textContent = fmt("cryptoHold", { x: coinQty(holdings[coin] || 0, c.dec) + " " + c.sym });
       document.getElementById("cryptoAmount").value = "";
       document.getElementById("cryptoEst").textContent = fmt("cryptoEst", { x: coinQty(0, c.dec), c: c.sym });
@@ -1867,12 +1941,15 @@
     /* ========== INIT ========== */
     setTheme(localStorage.getItem("xyz_theme") || "ungu");
     loadState();
+    loadSavedRates();
     loadNotifs();
     updateBell();
     applyLang();
     updateBalanceDisplay();
     renderTransactions();
     renderCard();
+    refreshCryptoRates();
+    setInterval(refreshCryptoRates, 60000);
   </script>
 </body>
 </html>
